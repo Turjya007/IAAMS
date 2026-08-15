@@ -1,0 +1,210 @@
+/*
+  ============ COLOR & FONT VARIABLES ============
+  এখানে সব color আর font একবার define করে রাখা হয়েছে।
+  পরে কোনো color বদলাতে চাইলে শুধু এখানে বদলালেই পুরো পেজে বদলে যাবে।
+  (আগে Tailwind এ যেভাবে tailwind.config এ করেছিলাম, এটা তারই CSS ভার্সন)
+*/
+:root {
+  --green: #1DB870;         /* মূল সবুজ রঙ - button, logo, heading accent */
+  --green-dark: #159c5e;    /* hover করলে একটু গাঢ় সবুজ */
+  --green-light-bg: #EAF8F1; /* পুরো পেজের হালকা সবুজ background */
+
+  --text-dark: #111111;     /* হেডিং এর কালো টেক্সট */
+  --text-gray: #6b7280;     /* সাধারণ প্যারাগ্রাফ টেক্সট */
+  --border-color: #d1d5db;  /* input এর বর্ডার কালার */
+
+  --error-color: #dc2626;
+  --success-color: #16a34a;
+}
+
+/* ============ BASIC RESET ============ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* এটা দিলে padding/border width এর হিসাবের বাইরে যাবে না */
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-dark);
+}
+
+/* ============ PAGE WRAPPER (পুরো স্ক্রিন) ============ */
+.page-wrapper {
+  min-height: 100vh;
+  background-color: var(--green-light-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ============ AUTH BOX (মাঝখানের সাদা বক্স, ২ ভাগে split) ============ */
+.auth-box {
+  width: 100%;
+  max-width: 900px;
+  min-height: 560px;
+  background-color: #ffffff;
+  display: flex;
+  border-radius: 0; /* কোনো curve নেই, একদম sharp corner */
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ============ বাম পাশ: ছবি ============ */
+.auth-left {
+  width: 42%;
+  position: relative; /* এটা দিলে ভিতরের overlay কে সঠিক জায়গায় বসানো যাবে */
+  overflow: hidden;
+}
+
+/* ছবিটা পুরো বাম পাশ ভরে থাকবে */
+.left-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ছবিটা যেন বাঁকা/চাপা না লাগে, ফ্রেম অনুযায়ী কেটে ফিট হবে */
+  display: block;
+}
+
+/* ছবির উপরে টেক্সট বসানোর overlay বক্স, নিচের দিকে হালকা অন্ধকার gradient */
+.left-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 35px;
+  color: #ffffff;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.left-heading {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.left-text {
+  font-size: 13px;
+  color: #f0f0f0;
+  line-height: 1.6;
+}
+
+/* ============ ডান পাশ: ফর্ম ============ */
+.auth-right {
+  width: 58%;
+  padding: 50px 45px;
+  overflow-y: auto;
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: var(--text-gray);
+  margin-bottom: 30px;
+}
+
+/* ============ FORM INPUTS ============ */
+.input-group {
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.input-row {
+  display: flex;
+  gap: 15px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--text-dark);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 0; /* এখানেও sharp corner */
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: var(--green);
+}
+
+/* ============ MESSAGE (error/success) ============ */
+.message {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.error-message {
+  color: var(--error-color);
+}
+
+.success-message {
+  color: var(--success-color);
+}
+
+.hidden {
+  display: none;
+}
+
+/* ============ SUBMIT BUTTON ============ */
+.submit-btn {
+  width: 100%;
+  background-color: var(--green);
+  color: #ffffff;
+  border: none;
+  border-radius: 0; /* sharp corner, pill shape না */
+  padding: 13px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.submit-btn:hover {
+  background-color: var(--green-dark);
+}
+
+/* ============ SWITCH TEXT (Login/Register লিংক) ============ */
+.switch-text {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-top: 20px;
+  text-align: center;
+}
+
+.switch-text a {
+  color: var(--green);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ============ RESPONSIVE (ছোট স্ক্রিনে বাম প্যানেল লুকিয়ে যাবে) ============ */
+@media (max-width: 768px) {
+  .auth-left {
+    display: none;
+  }
+  .auth-right {
+    width: 100%;
+  }
+}

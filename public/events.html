@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events - IAAMS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Sidebar layout er joono dashboard.css, notun list style er jonno events.css -->
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/events.css">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+
+    <!-- ============ Sidebar (dashboard.html er motoi) ============ -->
+    <div class="sidebar">
+      <div class="sidebar-logo">IAAMS</div>
+
+<nav class="sidebar-nav">
+  <a href="dashboard.html" class="nav-btn nav-link">Profile</a>
+  <a href="dashboard.html" class="nav-btn nav-link">My Events</a>
+  <a href="events.html" class="nav-btn nav-link active">Browse Events</a>
+  <a href="post-event.html" class="nav-btn nav-link">Post Event</a>
+  <a href="admin-panel.html" class="nav-btn nav-link hidden" id="adminPanelLink">Admin Panel</a>
+</nav>
+
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- ============ Main Content ============ -->
+    <div class="main-content">
+
+      <!-- ============ uporer Header Box ============ -->
+      <div class="page-header-box">
+        <p class="breadcrumb">Dashboard / Events</p>
+        <h1 class="page-heading">Events</h1>
+      </div>
+
+      <!-- ============ Event er List (ekta box er vitore sob row) ============ -->
+      <div class="events-list-box" id="eventsContainer">
+        <p id="loadingText">No events to show</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/events.js"></script>
+</body>
+</html>

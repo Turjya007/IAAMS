@@ -1,0 +1,81 @@
+/* ============ Admin Panel — একেকটা pending item এর card ============ */
+.admin-item-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.admin-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.admin-item-info {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-bottom: 4px;
+}
+
+/* ============ Approve / Reject / Mark-Paid বাটন গুলো রাখার জায়গা ============ */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-approve {
+  background-color: var(--green);
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.btn-approve:hover {
+  background-color: var(--green-dark);
+}
+
+.btn-reject {
+  background-color: #ffffff;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 8px 18px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.btn-reject:hover {
+  background-color: #fef2f2;
+}
+
+/* মার্ক-পেইড বাটন (approve বাটনের মতোই দেখতে, কিন্তু আলাদা ক্লাস — যাতে JS এ আলাদা করে ধরতে পারি) */
+.btn-mark-paid {
+  background-color: var(--green);
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.btn-mark-paid:hover {
+  background-color: var(--green-dark);
+}
+
+/* কোনো pending item না থাকলে এই মেসেজ দেখানো হবে */
+.empty-message {
+  color: var(--text-gray);
+  font-size: 14px;
+}

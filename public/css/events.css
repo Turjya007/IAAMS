@@ -1,0 +1,181 @@
+/* ============ uporer Header Box ============ */
+.page-header-box {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 20px 30px;
+  margin-bottom: 20px;
+}
+
+.breadcrumb {
+  font-size: 12px;
+  color: var(--text-gray);
+  margin-bottom: 6px;
+}
+
+.page-heading {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ============ Event List Box (sob event er wrapper) ============ */
+.events-list-box {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 0 30px;
+}
+
+/* ============ protita Event ekta row hisebe ============ */
+.event-row {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.event-row:last-child {
+  border-bottom: none;
+}
+
+/* row er uporer ongsho title/deadline bam a, button dan a */
+.event-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.event-deadline {
+  font-size: 13px;
+  color: var(--text-gray);
+}
+
+.event-deadline span {
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+.show-more-btn {
+  background-color: transparent;
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 7px 16px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0; /* button jeno chapa na jai */
+  margin-left: 20px;
+}
+
+.show-more-btn:hover {
+  background-color: var(--green);
+  color: #ffffff;
+}
+
+/* bistarito ongsho, row er vitore niche khulbe */
+.event-details {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.detail-line {
+  font-size: 14px;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.detail-line strong {
+  color: var(--text-dark);
+}
+
+/* ============ Register button ar tar pasher ongsho ============ */
+.event-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.register-btn {
+  background-color: var(--green);
+  border: none;
+  color: #ffffff;
+  padding: 8px 16px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.register-btn:hover {
+  background-color: var(--green-dark);
+}
+
+.registered-badge {
+  background-color: #d1fae5;
+  color: #065f46;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+}
+
+/* ============ Transaction ID form (shurute lukano) ============ */
+.register-form-box {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+
+.register-form-box input {
+  flex-grow: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--border-color);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.register-form-box input:focus {
+  border-color: var(--green);
+}
+
+.submit-txn-btn {
+  background-color: var(--green);
+  border: none;
+  color: #ffffff;
+  padding: 9px 18px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submit-txn-btn:hover {
+  background-color: var(--green-dark);
+}
+
+/* Registration er error/success message */
+.reg-message {
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.reg-message.error {
+  color: #dc2626;
+}
+
+.reg-message.success {
+  color: #16a34a;
+}

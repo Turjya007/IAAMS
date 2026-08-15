@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - IAAMS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+
+    <!-- ============ Left side: Sidebar ============ -->
+    <div class="sidebar">
+      <div class="sidebar-logo">IAAMS</div>
+
+      <nav class="sidebar-nav">
+        <!-- data-section attribute diye bujha jabe kon tab eta -->
+        <button class="nav-btn active" data-section="profile">Profile</button>
+        <button class="nav-btn" data-section="myEvents">My Events</button>
+        <a href="events.html" class="nav-btn nav-link">Browse Events</a>
+        <a href="post-event.html" class="nav-btn nav-link">Post Event</a>
+        <a href="admin-panel.html" class="nav-btn nav-link hidden" id="adminPanelLink">Admin Panel</a>
+      </nav>
+
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- ============ Right side: Main Content ============ -->
+    <div class="main-content">
+
+      <!-- ===== Section 1: Profile ===== -->
+      <div class="content-section" id="section-profile">
+
+        <div class="profile-header">
+          <div class="avatar-circle" id="avatarCircle"></div>
+          <div>
+            <h1 class="profile-name" id="profileName">Loading...</h1>
+            <p class="profile-role" id="profileRole"></p>
+          </div>
+        </div>
+
+        <div class="profile-details">
+          <div class="detail-row">
+            <span class="detail-label">Email</span>
+            <span class="detail-value" id="profileEmail"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Batch</span>
+            <span class="detail-value" id="profileBatch"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Department</span>
+            <span class="detail-value" id="profileDepartment"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Graduation Year</span>
+            <span class="detail-value" id="profileGradYear"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Membership Type</span>
+            <span class="detail-value" id="profileMembership"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="detail-value" id="profileStatus"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== Section 2: My Events (1st a lukano thakbe) ===== -->
+      <div class="content-section hidden" id="section-myEvents">
+        <h1 class="section-title">My Registered Events</h1>
+
+        <div id="myEventsContainer">
+          <p>Loading...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

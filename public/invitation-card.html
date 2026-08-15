@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitation Card - IAAMS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/invitation-card.css">
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- Card load hobar age ei message dekhabe -->
+    <p id="loadingMessage">Loading your invitation card...</p>
+
+    <!-- Card load hoye gele ei box ta dekhabe (ekhon hidden kore rakha) -->
+    <div class="invitation-card hidden" id="invitationCard">
+
+      <h1 class="card-heading">IAAMS Alumni Association</h1>
+      <p class="card-subheading">Event Invitation Card</p>
+
+      <div class="card-divider"></div>
+
+      <h2 class="event-title" id="eventTitle"></h2>
+
+      <div class="card-info-row">
+        <span class="info-label">Alumni Name:</span>
+        <span class="info-value" id="alumniName"></span>
+      </div>
+
+      <div class="card-info-row">
+        <span class="info-label">Event Date:</span>
+        <span class="info-value" id="eventDate"></span>
+      </div>
+
+      <div class="card-info-row">
+        <span class="info-label">Venue:</span>
+        <span class="info-value" id="eventVenue"></span>
+      </div>
+
+      <div class="card-info-row">
+        <span class="info-label">Serial No:</span>
+        <span class="info-value" id="serialNumber"></span>
+      </div>
+
+      <div class="card-info-row">
+        <span class="info-label">Payment Status:</span>
+        <span class="info-value payment-confirmed" id="paymentStatusText"></span>
+      </div>
+
+      <button class="print-btn" id="printBtn">Download / Print Card</button>
+
+    </div>
+
+  </div>
+
+  <script src="js/invitation-card.js"></script>
+</body>
+</html>

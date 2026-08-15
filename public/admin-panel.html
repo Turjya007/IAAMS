@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - IAAMS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- dashboard.css theke sidebar ar color variable gulo reuse korchi -->
+  <link rel="stylesheet" href="css/dashboard.css">
+  <!-- admin panel er jonno extra style (approve/reject button and etc) -->
+  <link rel="stylesheet" href="css/admin-panel.css">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+
+    <!-- ============ left side: Sidebar ============ -->
+    <div class="sidebar">
+      <div class="sidebar-logo">IAAMS Admin</div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-section="pendingUsers">Pending Alumni</button>
+        <button class="nav-btn" data-section="pendingEvents">Pending Events</button>
+        <button class="nav-btn" data-section="payments">Payments</button>
+        <a href="dashboard.html" class="nav-btn nav-link">← Back to Dashboard</a>
+      </nav>
+
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- ============ Right side: Main Content ============ -->
+    <div class="main-content">
+
+      <!-- ===== Section 1: Pending Alumni Approval ===== -->
+      <div class="content-section" id="section-pendingUsers">
+        <h1 class="section-title">Pending Alumni Approvals</h1>
+        <div id="pendingUsersContainer">
+          <p>No pending alumni</p>
+        </div>
+      </div>
+
+      <!-- ===== Section 2: Pending Events Approval (1st a lukano) ===== -->
+      <div class="content-section hidden" id="section-pendingEvents">
+        <h1 class="section-title">Pending Event Approvals</h1>
+        <div id="pendingEventsContainer">
+          <p>Loading...</p>
+        </div>
+      </div>
+
+      <!-- ===== Section 3: Pending Payments (1st a lukano) ===== -->
+      <div class="content-section hidden" id="section-payments">
+        <h1 class="section-title">Pending Payments</h1>
+        <div id="paymentsContainer">
+          <p>Loading...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/admin-panel.js"></script>
+</body>
+</html>

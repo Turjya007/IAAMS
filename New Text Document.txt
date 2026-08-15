@@ -1,0 +1,13 @@
+User : Last Remembered User
+
+mail : lastremembereduser@gmail.com
+
+Pass : LastRememberedPassword
+
+
+
+1. Pending events jokhon admin dekhche tokhon events er description dekhte pacche na. Ami chai admin description o dekhte pak.
+
+2. Alumni or Admin jokhon ekta event creat korche tokhon kon phone number a Taka pathabe seta dear to kono jaiga nai. Ami chai ekta field thakuk jekhane Bkash bumber ta diye debe ar Event e jokhon keo show more korbe tokhon Bkash number ta dekha o jabe. 
+
+3. Jokhon admin hisebe login korchi tokhon ekta problem dekha jacche. Side Bar er post event or brows event a click korle Admin panel ar thakche na. Hide hoye jacche. Only profile a gele e Admin panel dekha jacche. Ami chai  post event or brows event a geleo jeno side bar a Admin panel dekha jai.
