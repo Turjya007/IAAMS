@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fund Report - IAAMS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/fund-report.css">
+</head>
+<body>
+
+  <div class="report-wrapper">
+
+    <p id="loadingMessage">Loading report...</p>
+
+    <div class="report-content hidden" id="reportContent">
+
+      <div class="report-header">
+        <h1>IAAMS Alumni Association</h1>
+        <p>Fund Report</p>
+        <p class="report-date" id="reportGeneratedDate"></p>
+      </div>
+
+      <!-- ============ Summary ============ -->
+      <h2 class="section-heading">Summary</h2>
+      <div class="summary-row">
+        <div class="summary-box">
+          <p class="summary-label">Total Income</p>
+          <p class="summary-value income" id="sumTotalIncome"></p>
+        </div>
+        <div class="summary-box">
+          <p class="summary-label">Total Expense</p>
+          <p class="summary-value expense" id="sumTotalExpense"></p>
+        </div>
+        <div class="summary-box">
+          <p class="summary-label">Current Balance</p>
+          <p class="summary-value balance" id="sumBalance"></p>
+        </div>
+      </div>
+
+      <!-- ============ Income Breakdown ============ -->
+      <h2 class="section-heading">Income Breakdown (by Source)</h2>
+      <table class="report-table" id="incomeBreakdownTable">
+        <thead>
+          <tr><th>Source</th><th>Amount</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- ============ Expense Breakdown ============ -->
+      <h2 class="section-heading">Expense Breakdown (by Category)</h2>
+      <table class="report-table" id="expenseBreakdownTable">
+        <thead>
+          <tr><th>Category</th><th>Amount</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- ============ Event-wise Table ============ -->
+      <h2 class="section-heading">Event-wise Income &amp; Expense</h2>
+      <table class="report-table" id="eventWiseTable">
+        <thead>
+          <tr><th>Event</th><th>Income</th><th>Expense</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- ============ Full Ledger ============ -->
+      <h2 class="section-heading">Transaction Ledger</h2>
+      <table class="report-table" id="ledgerTable">
+        <thead>
+          <tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Running Balance</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <button class="print-btn" id="printBtn">Download / Print Report</button>
+
+    </div>
+
+  </div>
+
+  <script src="js/fund-report.js"></script>
+</body>
+</html>

@@ -1,4 +1,11 @@
 /* ============ Admin Panel — একেকটা pending item এর card ============ */
+.breadcrumb{
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 20px 30px;
+  margin-bottom: 20px;
+}
+
 .admin-item-card {
   background-color: #ffffff;
   border: 1px solid var(--border-color);
@@ -78,4 +85,75 @@
 .empty-message {
   color: var(--text-gray);
   font-size: 14px;
+}
+
+/* ============ Fund Management ============ */
+.fund-summary-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.fund-summary-card {
+  flex: 1;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  text-align: center;
+}
+
+.fund-summary-label {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-bottom: 5px;
+}
+
+.fund-summary-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.fund-summary-value.income {
+  color: var(--green-dark);
+}
+
+.fund-summary-value.expense {
+  color: #c0392b;
+}
+
+.fund-summary-value.balance {
+  color: var(--text-dark);
+}
+
+.fund-form-box {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+
+.fund-form-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.fund-form-box select,
+.fund-form-box input {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+
+.entry-income {
+  border-left: 4px solid var(--green);
+}
+
+.entry-expense {
+  border-left: 4px solid #c0392b;
 }

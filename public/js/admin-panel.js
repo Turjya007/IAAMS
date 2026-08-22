@@ -4,18 +4,18 @@ if (!token) {
   window.location.href = 'login.html';
 }
 
-// ============ Sidebar ট্যাব সুইচ করার Logic (dashboard.js থেকে হুবহু কপি) ============
+// ============ Sidebar tab switch korar Logic (dashboard.js theke hubuhu copy) ============
 
 const navButtons = document.querySelectorAll('.nav-btn');
 
 navButtons.forEach(function (button) {
   button.addEventListener('click', function () {
 
-    // এই লিংক বাটন গুলার (যেমন "Back to Dashboard") data-section নাই,
-    // তাই সেগুলার জন্য এই ট্যাব-সুইচ লজিক স্কিপ করতে হবে, নাহলে error আসবে
+    // Ei link button gular (jemon "Back to Dashboard") data-section nai,
+    // Tai segular jonno ei tab switch logic skip korte hobe, nahole error ashbe
     const sectionName = button.getAttribute('data-section');
     if (!sectionName) {
-      return; // data-section না থাকলে এখানেই থেমে যাচ্ছি, নিচের কোড চলবে না
+      return; // data-section na thakle ekhane e theme jacche, nicher code cholbe na
     }
 
     navButtons.forEach(function (btn) {
@@ -30,13 +30,16 @@ navButtons.forEach(function (button) {
 
     document.getElementById('section-' + sectionName).classList.remove('hidden');
 
-    // কোন ট্যাবে ক্লিক হলো তার ওপর ভিত্তি করে ডেটা লোড করছি
-    if (sectionName === 'pendingUsers') {
+    // Kon tab a click holo tar opor vitti kore data load kora hocche
+
+      if (sectionName === 'pendingUsers') {
       loadPendingUsers();
     } else if (sectionName === 'pendingEvents') {
       loadPendingEvents();
     } else if (sectionName === 'payments') {
       loadPendingPayments();
+    } else if (sectionName === 'fund') {
+      loadFundData();
     }
   });
 });
@@ -46,7 +49,7 @@ function formatDate(dateString) {
   const dateObj = new Date(dateString);
   return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
-// ============ Pending Alumni লিস্ট Load করা ============
+// ============ Pending Alumni list Load kora ============
 async function loadPendingUsers() {
   const container = document.getElementById('pendingUsersContainer');
   container.innerHTML = '<p>Loading...</p>';
@@ -84,8 +87,8 @@ function displayPendingUsers(users) {
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
 
-    // user._id কে onclick এর ভেতরে পাঠাচ্ছি, যাতে approveUser/rejectUser
-    // ফাংশন জানতে পারে ঠিক কোন user কে approve/reject করতে হবে
+    // user._id ke onclick er vitore pathacchi, jate approveUser/rejectUser
+    // function jante pare thik kon user ke approve/reject korte hobe
     const cardHTML = `
       <div class="admin-item-card">
         <h3 class="admin-item-title">${user.name}</h3>
@@ -105,10 +108,10 @@ function displayPendingUsers(users) {
   }
 }
 
-// ============ Approve / Reject করার Logic ============
+// ============ Approve / Reject korar Logic ============
 
-// এই দুইটা ফাংশন window এ (global scope এ) থাকতে হবে,
-// কারণ HTML এর onclick থেকে এদের কল করা হচ্ছে
+// Ei duita function window a (global scope a) thakte hobe,
+// karon HTML er onclick theke eder call kora hocche
 async function approveUser(userId) {
   try {
     const response = await fetch('/api/admin/approve/' + userId, {
@@ -121,8 +124,8 @@ async function approveUser(userId) {
       return;
     }
 
-    // Approve সফল হলে লিস্টটা আবার লোড করছি,
-    // তাহলে যাকে approve করা হলো সে আর pending লিস্টে দেখাবে না
+    // Approve shofol hole list ta abar load korchi,
+    // tahole jake approve kora holo se ar pending list a dekhabe na
     loadPendingUsers();
 
   } catch (error) {
@@ -330,5 +333,173 @@ async function markAsPaid(registrationId) {
 
   } catch (error) {
     alert('Something went wrong.');
+  }
+}
+
+// ============ Fund Management ============
+
+// type (income/expense) অনুযায়ী category dropdown পূরণ করা
+const incomeCategories = ['Event Registration Fee', 'Sponsorship', 'Others'];
+const expenseCategories = ['Decoration', 'Food', 'Printing', 'Prizes', 'Others'];
+
+function populateCategoryDropdown() {
+  const typeSelect = document.getElementById('fundTypeSelect');
+  const categorySelect = document.getElementById('fundCategorySelect');
+
+  let categoryList = [];
+  if (typeSelect.value === 'income') {
+    categoryList = incomeCategories;
+  } else {
+    categoryList = expenseCategories;
+  }
+
+  categorySelect.innerHTML = '';
+  for (let i = 0; i < categoryList.length; i++) {
+    const option = document.createElement('option');
+    option.value = categoryList[i];
+    option.textContent = categoryList[i];
+    categorySelect.appendChild(option);
+  }
+
+  // dropdown notun kore banano hoyeche, tai "Others" input abar check kore lukiye rakhi
+  toggleOtherCategoryInput();
+}
+
+// "Others" select korle extra text box dekhano, na hole lukano
+function toggleOtherCategoryInput() {
+  const categorySelect = document.getElementById('fundCategorySelect');
+  const otherInput = document.getElementById('fundOtherCategoryInput');
+
+  if (categorySelect.value === 'Others') {
+    otherInput.classList.remove('hidden');
+  } else {
+    otherInput.classList.add('hidden');
+  }
+}
+
+// type dropdown change hole category dropdown abar bananor jonno
+document.getElementById('fundTypeSelect').addEventListener('change', populateCategoryDropdown);
+document.getElementById('fundCategorySelect').addEventListener('change', toggleOtherCategoryInput);
+
+// page load howar shathe shathe ekbar category dropdown purno kore rakhi
+populateCategoryDropdown();
+
+// ============ নতুন Entry Add করা ============
+document.getElementById('addFundEntryBtn').addEventListener('click', async function () {
+  const type = document.getElementById('fundTypeSelect').value;
+  const categorySelectValue = document.getElementById('fundCategorySelect').value;
+  const otherCategoryValue = document.getElementById('fundOtherCategoryInput').value;
+  const amount = document.getElementById('fundAmountInput').value;
+  const description = document.getElementById('fundDescriptionInput').value;
+  const messageBox = document.getElementById('fundFormMessage');
+
+  // jodi "Others" select kora thake, tahole free-text ta e asol category hobe
+  let finalCategory = categorySelectValue;
+  if (categorySelectValue === 'Others') {
+    finalCategory = otherCategoryValue;
+  }
+
+  if (finalCategory.trim() === '' || amount.trim() === '') {
+    messageBox.textContent = 'Please fill category and amount.';
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/fund', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        type: type,
+        category: finalCategory,
+        amount: amount,
+        description: description
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      messageBox.textContent = data.message || 'Failed to add entry.';
+      return;
+    }
+
+    // form khali kore dicchi
+    document.getElementById('fundAmountInput').value = '';
+    document.getElementById('fundDescriptionInput').value = '';
+    document.getElementById('fundOtherCategoryInput').value = '';
+    messageBox.textContent = 'Entry added successfully!';
+
+    // list ar summary abar load kortesi
+    loadFundData();
+
+  } catch (error) {
+    messageBox.textContent = 'Something went wrong.';
+  }
+});
+
+// ============ Fund ডেটা (Entry List + Summary) Load করা ============
+async function loadFundData() {
+  const container = document.getElementById('fundEntriesContainer');
+  container.innerHTML = '<p>Loading...</p>';
+
+  try {
+    const response = await fetch('/api/fund', {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      container.innerHTML = '<p>Could not load fund data.</p>';
+      return;
+    }
+
+    // Summary card গুলো আপডেট করছি
+    document.getElementById('totalIncomeText').textContent = data.totalIncome + " TK";
+    document.getElementById('totalExpenseText').textContent = data.totalExpense + " TK";
+    document.getElementById('balanceText').textContent = data.balance + " TK";
+
+    displayFundEntries(data.entries);
+
+  } catch (error) {
+    container.innerHTML = '<p>Something went wrong.</p>';
+  }
+}
+
+function displayFundEntries(entries) {
+  const container = document.getElementById('fundEntriesContainer');
+
+  if (entries.length === 0) {
+    container.innerHTML = '<p class="empty-message">No fund entries yet.</p>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i];
+
+    // type onujayi css class ('entry-income' ba 'entry-expense')
+    let entryClass = 'entry-income';
+    let sign = '+';
+    if (entry.type === 'expense') {
+      entryClass = 'entry-expense';
+      sign = '-';
+    }
+
+    const cardHTML = `
+      <div class="admin-item-card ${entryClass}">
+        <h3 class="admin-item-title">${entry.category} (${sign}TK ${entry.amount})</h3>
+        <p class="admin-item-info">Description: ${entry.description || 'N/A'}</p>
+        <p class="admin-item-info">Added By: ${entry.addedBy.name}</p>
+        <p class="admin-item-info">Date: ${formatDate(entry.createdAt)}</p>
+      </div>
+    `;
+
+    container.innerHTML += cardHTML;
   }
 }

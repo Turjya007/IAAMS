@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth.routes'); //new line added
 const adminRoutes = require('./routes/admin.routes');
 const eventRoutes = require('./routes/event.routes');
 const registrationRoutes = require('./routes/registration.routes');
+const fundRoutes = require('./routes/fund.routes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
+app.use('/api/fund', fundRoutes);
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'IAAMS server is running!' });

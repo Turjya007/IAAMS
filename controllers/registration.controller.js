@@ -144,4 +144,56 @@ async function getInvitationCardData(req, res) {
   }
 }
 
-module.exports = { registerForEvent, getMyRegistrations, markAsPaid, getPendingPayments,getInvitationCardData };
+async function markAttendance(req, res) {
+  try {
+    const eventId = req.params.eventId;
+    const userId = req.user.id; // token theke asche, ke login kore ache
+
+    // ei user ar ei event er registration ta khujchi
+    const registration = await registrationModel.findOne({
+      event: eventId,
+      user: userId
+    });
+
+    if (!registration) {
+      return res.status(404).json({ message: 'You have not registered for this event' });
+    }
+
+    // Payment paid na thakle attendance dewar dorkar nai
+    if (registration.paymentStatus !== 'paid') {
+      return res.status(400).json({ message: 'Your payment is not confirmed yet' });
+    }
+
+    // Already attended thakle abar mark korar dorkar nai
+    if (registration.attended === true) {
+      return res.status(200).json({ message: 'Attendance already marked', alreadyMarked: true });
+    }
+
+    registration.attended = true;
+    await registration.save();
+
+    res.status(200).json({ message: 'Attendance marked successfully', alreadyMarked: false });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+async function getAttendanceList(req, res) {
+  try {
+    const eventId = req.params.eventId;
+
+    const attendedRegistrations = await registrationModel
+      .find({ event: eventId, attended: true })
+      .populate('user', 'name email')
+      .sort({ updatedAt: -1 }); // sobar age jara sobcheye pore attend korlo tara dekhabe
+
+    res.status(200).json(attendedRegistrations);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+
+module.exports = { registerForEvent, getMyRegistrations, markAsPaid, getPendingPayments,getInvitationCardData,markAttendance, getAttendanceList };

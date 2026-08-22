@@ -26,6 +26,7 @@
         <button class="nav-btn active" data-section="pendingUsers">Pending Alumni</button>
         <button class="nav-btn" data-section="pendingEvents">Pending Events</button>
         <button class="nav-btn" data-section="payments">Payments</button>
+        <button class="nav-btn" data-section="fund">Fund Management</button>
         <a href="dashboard.html" class="nav-btn nav-link">← Back to Dashboard</a>
       </nav>
 
@@ -37,7 +38,7 @@
 
       <!-- ===== Section 1: Pending Alumni Approval ===== -->
       <div class="content-section" id="section-pendingUsers">
-        <h1 class="section-title">Pending Alumni Approvals</h1>
+        <div class="breadcrumb"><h1 class="section-title">Pending Alumni Approvals</h1></div>
         <div id="pendingUsersContainer">
           <p>No pending alumni</p>
         </div>
@@ -45,7 +46,7 @@
 
       <!-- ===== Section 2: Pending Events Approval (1st a lukano) ===== -->
       <div class="content-section hidden" id="section-pendingEvents">
-        <h1 class="section-title">Pending Event Approvals</h1>
+        <div class="breadcrumb"><h1 class="section-title">Pending Event Approvals</h1></div>
         <div id="pendingEventsContainer">
           <p>Loading...</p>
         </div>
@@ -53,8 +54,59 @@
 
       <!-- ===== Section 3: Pending Payments (1st a lukano) ===== -->
       <div class="content-section hidden" id="section-payments">
-        <h1 class="section-title">Pending Payments</h1>
+        <div class="breadcrumb"><h1 class="section-title">Pending Payments</h1></div>
         <div id="paymentsContainer">
+          <p>Loading...</p>
+        </div>
+      </div>
+
+            <!-- ===== Section 4: Fund Management (শুরুতে লুকানো) ===== -->
+      <div class="content-section hidden" id="section-fund">
+        <div class="breadcrumb"><h1 class="section-title">Fund Management</h1></div>
+                <a href="fund-report.html" target="_blank" class="btn-approve" style="display:inline-block; text-decoration:none; margin-bottom:15px;">Download Fund Report (PDF)</a>
+
+        <!-- Summary Cards -->
+        <div class="fund-summary-row">
+          <div class="fund-summary-card">
+            <p class="fund-summary-label">Total Income</p>
+            <p class="fund-summary-value income" id="totalIncomeText">0 TK</p>
+          </div>
+          <div class="fund-summary-card">
+            <p class="fund-summary-label">Total Expense</p>
+            <p class="fund-summary-value expense" id="totalExpenseText">0 TK</p>
+          </div>
+          <div class="fund-summary-card">
+            <p class="fund-summary-label">Current Balance</p>
+            <p class="fund-summary-value balance" id="balanceText">0 TK</p>
+          </div>
+        </div>
+
+        <!-- Entry jog korar form -->
+        <div class="fund-form-box">
+          <h3 class="fund-form-title">Add New Entry</h3>
+
+          <select id="fundTypeSelect">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+
+          <select id="fundCategorySelect">
+            <!-- এটা JS দিয়ে dynamic ভাবে পূরণ হবে, type অনুযায়ী -->
+          </select>
+
+          <!-- "Others" সিলেক্ট করলে এটা দেখা যাবে -->
+          <input type="text" id="fundOtherCategoryInput" placeholder="Specify category" class="hidden" />
+
+          <input type="number" id="fundAmountInput" placeholder="Amount (৳)" />
+          <input type="text" id="fundDescriptionInput" placeholder="Description (optional)" />
+
+          <button class="btn-approve" id="addFundEntryBtn">Add Entry</button>
+          <p id="fundFormMessage"></p>
+        </div>
+
+        <!-- সব Entry এর লিস্ট -->
+        <h3 class="fund-form-title">Transaction History</h3>
+        <div id="fundEntriesContainer">
           <p>Loading...</p>
         </div>
       </div>

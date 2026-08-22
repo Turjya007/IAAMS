@@ -7,6 +7,7 @@ if (!token) {
 const eventsContainer = document.getElementById('eventsContainer');
 
 // ============ Admin hole Sidebar a Admin Panel link dekhano ============
+let isAdmin = false;
 async function checkAdminAndShowLink() {
   try {
     const response = await fetch('/api/auth/me', {
@@ -22,6 +23,7 @@ async function checkAdminAndShowLink() {
 
     if (data.role === 'admin') {
       document.getElementById('adminPanelLink').classList.remove('hidden');
+      isAdmin = true;
     }
 
   } catch (error) {
@@ -118,6 +120,14 @@ function displayEvents(events) {
       actionHTML = `<button class="register-btn" onclick="toggleRegisterForm(${i})">Register</button>`;
     }
 
+    // admin hole QR button o dekhabo
+    let qrButtonHTML = '';
+    
+    if (isAdmin) {
+      qrButtonHTML = `<button class="show-qr-btn" onclick="showQRCode('${event._id}', '${event.title}')">Show QR Code</button>
+        <button class="show-qr-btn" onclick="showAttendanceList('${event._id}', '${event.title}')">View Attendance</button>`;
+    }
+
     const rowHTML = `
       <div class="event-row">
         <div class="event-row-top">
@@ -129,6 +139,7 @@ function displayEvents(events) {
           <div class="event-actions">
             <button class="show-more-btn" onclick="toggleDetails(${i})">Show More</button>
             ${actionHTML}
+            ${qrButtonHTML}
           </div>
         </div>
 
@@ -214,17 +225,87 @@ async function submitRegistration(index, eventId) {
   }
 }
 
+// ============ QR Code দেখানো ============
+function showQRCode(eventId, eventTitle) {
+  // ei URL tai QR code er vitore thakbe
+  // alumni er phone diye scan korle ei link ta khulbe
+  const attendanceUrl = window.location.origin + '/attendance.html?eventId=' + eventId;
+
+  document.getElementById('qrModalTitle').innerText = eventTitle;
+
+  const canvas = document.getElementById('qrCanvas');
+
+  // QRCode.toCanvas library theke asche (CDN script theke)
+  // eta canvas er vitore QR code er chobi eke dey
+  QRCode.toCanvas(canvas, attendanceUrl, function (error) {
+    if (error) {
+      console.log('QR generate error:', error);
+    }
+  });
+
+  document.getElementById('qrModalOverlay').classList.remove('hidden');
+}
+
+function closeQRModal() {
+  document.getElementById('qrModalOverlay').classList.add('hidden');
+}
+
 // ============ Logout ============
 document.getElementById('logoutBtn').addEventListener('click', function () {
   localStorage.removeItem('iaamsToken');
   window.location.href = 'login.html';
 });
 
+// ============ Attendance List দেখানো ============
+async function showAttendanceList(eventId, eventTitle) {
+  document.getElementById('attendanceModalTitle').innerText = eventTitle;
+
+  const listContainer = document.getElementById('attendanceListContainer');
+  listContainer.innerHTML = '<p>Loading...</p>';
+
+  document.getElementById('attendanceModalOverlay').classList.remove('hidden');
+
+  try {
+    const response = await fetch('/api/registrations/attendance-list/' + eventId, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      listContainer.innerHTML = '<p>Could not load attendance list.</p>';
+      return;
+    }
+
+    if (data.length === 0) {
+      listContainer.innerHTML = '<p>No one has marked attendance yet.</p>';
+      return;
+    }
+
+    listContainer.innerHTML = '';
+
+    for (let i = 0; i < data.length; i++) {
+      const registration = data[i];
+      listContainer.innerHTML += `
+        <p class="detail-line">${i + 1}. ${registration.user.name} (${registration.user.email})</p>
+      `;
+    }
+
+  } catch (error) {
+    listContainer.innerHTML = '<p>Something went wrong.</p>';
+  }
+}
+
+function closeAttendanceModal() {
+  document.getElementById('attendanceModalOverlay').classList.add('hidden');
+}
+
 // ============ পেজ লোড হওয়ার সাথে সাথে দুটো কাজ ============
 // প্রথমে registered event ID গুলো আনছি, তারপর event লিস্ট আনছি
 // (যেন button/badge প্রথমবারই সঠিকভাবে দেখানো যায়)
 async function init() {
-  checkAdminAndShowLink();
+  await checkAdminAndShowLink();   // ei line a await jog kora holo
   await loadRegisteredEventIds();
   loadEvents();
 }

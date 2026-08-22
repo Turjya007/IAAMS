@@ -12,6 +12,7 @@
   <!-- Sidebar layout er joono dashboard.css, notun list style er jonno events.css -->
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/events.css">
+  <script src="js/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -46,6 +47,26 @@
         <p id="loadingText">No events to show</p>
       </div>
 
+    </div>
+
+    <!-- ============ QR Code দেখানোর Modal (শুরুতে লুকানো) ============ -->
+    <div class="qr-modal-overlay hidden" id="qrModalOverlay">
+      <div class="qr-modal-box">
+        <h2 class="qr-modal-title" id="qrModalTitle"></h2>
+        <p class="qr-modal-subtitle">Alumni will scan this at the venue to mark attendance</p>
+        <canvas id="qrCanvas"></canvas>
+        <button class="qr-close-btn" onclick="closeQRModal()">Close</button>
+      </div>
+    </div>
+
+        <!-- ============ Attendance List দেখানোর Modal (শুরুতে লুকানো) ============ -->
+    <div class="qr-modal-overlay hidden" id="attendanceModalOverlay">
+      <div class="qr-modal-box">
+        <h2 class="qr-modal-title" id="attendanceModalTitle"></h2>
+        <p class="qr-modal-subtitle">Alumni who have marked attendance</p>
+        <div id="attendanceListContainer"></div>
+        <button class="qr-close-btn" onclick="closeAttendanceModal()">Close</button>
+      </div>
     </div>
 
   </div>

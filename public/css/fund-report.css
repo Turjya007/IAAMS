@@ -1,0 +1,151 @@
+:root {
+  --green: #1DB870;
+  --green-dark: #159c5e;
+  --text-dark: #1a1a1a;
+  --text-gray: #666666;
+  --border-color: #d9d9d9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #EAF8F1;
+}
+
+.report-wrapper {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+#loadingMessage {
+  font-size: 18px;
+  color: var(--text-gray);
+}
+
+.hidden {
+  display: none;
+}
+
+.report-content {
+  background-color: #ffffff;
+  max-width: 800px;
+  width: 100%;
+  padding: 40px;
+  border: 1px solid var(--border-color);
+}
+
+.report-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--green);
+  padding-bottom: 15px;
+}
+
+.report-header h1 {
+  font-size: 22px;
+  color: var(--green-dark);
+}
+
+.report-header p {
+  font-size: 14px;
+  color: var(--text-gray);
+  margin-top: 3px;
+}
+
+.report-date {
+  font-size: 12px !important;
+  margin-top: 8px !important;
+}
+
+.section-heading {
+  font-size: 16px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+  border-left: 4px solid var(--green);
+  padding-left: 10px;
+}
+
+.summary-row {
+  display: flex;
+  gap: 15px;
+}
+
+.summary-box {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  text-align: center;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+
+.summary-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.summary-value.income {
+  color: var(--green-dark);
+}
+
+.summary-value.expense {
+  color: #c0392b;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid var(--border-color);
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.report-table th {
+  background-color: #f5f5f5;
+}
+
+.print-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 30px;
+  background-color: var(--green);
+  color: #ffffff;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.print-btn:hover {
+  background-color: var(--green-dark);
+}
+
+/* Print korar somoy button dekhabe na */
+@media print {
+  .print-btn {
+    display: none;
+  }
+  body {
+    background-color: #ffffff;
+  }
+  .report-content {
+    border: none;
+  }
+}
