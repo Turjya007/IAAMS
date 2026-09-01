@@ -104,7 +104,7 @@ async function getPendingPayments(req, res) {
   try {
     const pendingRegistrations = await registrationModel
       .find({ paymentStatus: 'pending' })
-      .populate('event', 'title')   // শুধু event এর title আনছি
+      .populate('event', 'title registrationFee') // event এর title এবং registrationFee আনছি
       .populate('user', 'name email') // শুধু user এর name, email আনছি
       .sort({ createdAt: -1 });
 

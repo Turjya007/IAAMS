@@ -303,6 +303,7 @@ function displayPendingPayments(registrations) {
         <p class="admin-item-info">Alumni Name: ${registration.user.name}</p>
         <p class="admin-item-info">Email: ${registration.user.email}</p>
         <p class="admin-item-info">Transaction ID: ${registration.transactionId}</p>
+        <p class="admin-item-info">Registration Fee: TK${registration.event.registrationFee}</p>
 
         <div class="action-buttons">
           <button class="btn-approve" onclick="markAsPaid('${registration._id}')">Mark as Paid</button>
