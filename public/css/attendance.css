@@ -1,0 +1,71 @@
+:root {
+  --green: #1DB870;
+  --green-dark: #159c5e;
+  --red: #e74c3c;
+  --orange: #e6a23c;
+  --text-dark: #1a1a1a;
+  --text-gray: #666666;
+  --border-color: #d9d9d9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #EAF8F1;
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.attendance-box {
+  background-color: #ffffff;
+  border: 2px solid var(--green);
+  padding: 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+#statusMessage {
+  font-size: 18px;
+  color: var(--text-gray);
+}
+
+.hidden {
+  display: none;
+}
+
+.status-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.status-text {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Success hole (attendance mark hoye gele) */
+.status-success .status-text {
+  color: var(--green-dark);
+}
+
+/* Already marked thakle (warning) */
+.status-warning .status-text {
+  color: var(--orange);
+}
+
+/* Error hole (payment pending, registration nai, ityadi) */
+.status-error .status-text {
+  color: var(--red);
+}
