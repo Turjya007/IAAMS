@@ -1,5 +1,6 @@
 // controllers/registration.controller.js
 const registrationModel = require('../models/registration.model');
+const notificationModel = require('../models/notification.model');
 const eventModel = require('../models/event.model');
 
 // ============ Event এ Register করা ============
@@ -83,11 +84,18 @@ async function markAsPaid(req, res) {
         serialNumber: serialNumber
       },
       { new: true }
-    );
+    ).populate('event', 'title');
 
-    if (!updatedRegistration) {
+        if (!updatedRegistration) {
       return res.status(404).json({ message: 'Registration not found' });
     }
+
+    // payment paid mark hoye gele, sei alumni ke notification pathacchi
+    await notificationModel.create({
+      user: updatedRegistration.user,
+      message: `Your payment for "${updatedRegistration.event.title}" has been confirmed!`,
+      type: 'payment_confirmed'
+    });
 
     res.status(200).json({
       message: 'Payment marked as paid',

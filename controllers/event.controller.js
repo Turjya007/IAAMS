@@ -1,5 +1,6 @@
 // controllers/event.controller.js
 const eventModel = require('../models/event.model');
+const notificationModel = require('../models/notification.model');
 
 // Event creat kora (ekhon Admin ar Alumni duijon e parbe) 
 async function createEvent(req, res) {
@@ -78,9 +79,16 @@ async function approveEvent(req, res) {
       { new: true }
     );
 
-    if (!updatedEvent) {
+        if (!updatedEvent) {
       return res.status(404).json({ message: 'Event not found' });
     }
+
+    // event approve hoye gele, je alumni post koreche take notification pathacchi
+    await notificationModel.create({
+      user: updatedEvent.postedBy,
+      message: `Your event "${updatedEvent.title}" has been approved!`,
+      type: 'event_approved'
+    });
 
     res.status(200).json({ message: 'Event approved', event: updatedEvent });
 
