@@ -23,6 +23,10 @@
         <!-- data-section attribute diye bujha jabe kon tab eta -->
         <button class="nav-btn active" data-section="profile">Profile</button>
         <button class="nav-btn" data-section="myEvents">My Events</button>
+        <button class="nav-btn" data-section="notifications" id="notificationBtn">
+          Notifications
+          <span class="notif-dot hidden" id="notifDot"></span>
+        </button>
         <a href="events.html" class="nav-btn nav-link">Browse Events</a>
         <a href="post-event.html" class="nav-btn nav-link">Post Event</a>
         <a href="admin-panel.html" class="nav-btn nav-link hidden" id="adminPanelLink">Admin Panel</a>
@@ -79,6 +83,15 @@
         <h1 class="section-title">My Registered Events</h1>
 
         <div id="myEventsContainer">
+          <p>Loading...</p>
+        </div>
+      </div>
+
+      <!-- ===== Section 3: Notifications (1st a lukano thakbe) ===== -->
+      <div class="content-section hidden" id="section-notifications">
+        <h1 class="section-title">Notifications</h1>
+
+        <div id="notificationsContainer">
           <p>Loading...</p>
         </div>
       </div>

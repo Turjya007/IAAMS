@@ -233,3 +233,44 @@ body {
 .view-card-btn:hover {
   background-color: var(--green-dark);
 }
+
+/* ============ Notification Bell Dot (sidebar এ) ============ */
+.notif-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  margin-left: 8px;
+}
+
+/* .notif-dot ebong .hidden dutai thakle, ei rule ta jitbe (beshi specific) */
+.notif-dot.hidden {
+  display: none;
+}
+
+/* ============ Notifications Section (main content এ) ============ */
+.notification-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--border-color);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+
+/* যে notification গুলো এখনো পড়া হয়নি, সেগুলোর বাম পাশে সবুজ বর্ডার + হালকা সবুজ background */
+.notification-card.unread {
+  border-left: 4px solid var(--green);
+  background-color: var(--green-light-bg);
+}
+
+.notification-message {
+  font-size: 14px;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: var(--text-gray);
+}

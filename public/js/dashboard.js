@@ -36,6 +36,11 @@ navButtons.forEach(function (button) {
     if (sectionName === 'myEvents') {
       loadMyEvents();
     }
+
+    // যদি "Notifications" ট্যাবে ক্লিক করা হয়, তাহলে load + read মার্ক করছি
+    if (sectionName === 'notifications') {
+      loadNotifications();
+    }
   });
 });
 
@@ -151,5 +156,118 @@ document.getElementById('logoutBtn').addEventListener('click', function () {
   window.location.href = 'login.html';
 });
 
+// ============ Notification Load করা ============
+async function loadNotifications() {
+  const container = document.getElementById('notificationsContainer');
+  container.innerHTML = '<p>Loading...</p>';
+
+  try {
+    const response = await fetch('/api/notifications/my', {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      container.innerHTML = '<p>Could not load notifications.</p>';
+      return;
+    }
+
+    displayNotifications(data);
+
+    // dekha shesh, tai ekhon shob "read" mark kore dicchi
+    await markNotificationsAsRead();
+
+    // dot ta lukiye felchi, karon ekhon r kono unread nai
+    document.getElementById('notifDot').classList.add('hidden');
+
+  } catch (error) {
+    container.innerHTML = '<p>Something went wrong.</p>';
+  }
+}
+
+function formatNotificationTime(dateString) {
+  const dateObj = new Date(dateString);
+  return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function displayNotifications(notifications) {
+  const container = document.getElementById('notificationsContainer');
+
+  if (notifications.length === 0) {
+    container.innerHTML = '<p>You have no notifications yet.</p>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  for (let i = 0; i < notifications.length; i++) {
+    const notif = notifications[i];
+
+    // unread hole ekta extra class jog kortesi, jeta die CSS te alada style dekhabe
+    let unreadClass = '';
+    if (notif.isRead === false) {
+      unreadClass = 'unread';
+    }
+
+    const cardHTML = `
+      <div class="notification-card ${unreadClass}">
+        <p class="notification-message">${notif.message}</p>
+        <p class="notification-time">${formatNotificationTime(notif.createdAt)}</p>
+      </div>
+    `;
+
+    container.innerHTML += cardHTML;
+  }
+}
+
+// ============ সব Notification "read" মার্ক করা ============
+async function markNotificationsAsRead() {
+  try {
+    await fetch('/api/notifications/mark-read', {
+      method: 'PATCH',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+  } catch (error) {
+    console.log('Error marking notifications as read:', error);
+  }
+}
+
+// ============ প্রথমবার পেজ লোড হলে, unread notification আছে কিনা check করা ============
+async function checkUnreadNotifications() {
+  try {
+    const response = await fetch('/api/notifications/my', {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return;
+    }
+
+    // koyta unread notification ache seita gunte hocche
+    let unreadCount = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].isRead === false) {
+        unreadCount = unreadCount + 1;
+      }
+    }
+
+    // unread thakle dot ta dekhacchi
+    if (unreadCount > 0) {
+      document.getElementById('notifDot').classList.remove('hidden');
+    }
+
+  } catch (error) {
+    console.log('Error checking notifications:', error);
+  }
+}
+
 // পেজ লোড হওয়ার সাথে সাথে প্রথমে Profile দেখাচ্ছি
 loadProfile();
+
+// পেজ লোড হওয়ার সাথে সাথে unread notification আছে কিনা চেক করছি (dot দেখানোর জন্য)
+checkUnreadNotifications();
