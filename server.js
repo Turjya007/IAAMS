@@ -12,6 +12,7 @@ const notificationRoutes = require('./routes/notification.routes');
 const fundRoutes = require('./routes/fund.routes');
 const cron = require('node-cron');
 const sendDeadlineReminders = require('./jobs/deadlineReminder.job');
+const updateMembershipTypes = require('./jobs/membershipUpdate.job');
 
 const app = express();
 
@@ -32,14 +33,23 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'IAAMS server is running!' });
 });
 
-// shudhu test korar jonno — server chalu hole ekbar chalabe
+// shudhu test korar jonno — server chalu hole ekbar chalabo
 //sendDeadlineReminders();
+
+// shudhu test korar jonno — server chalu hole ekbar chalabe
+updateMembershipTypes();
 
 // Protidin 9 tai (21:00) deadline reminder check korbe
 // cron format: minute hour day month weekday
 cron.schedule('0 21 * * *', () => {
   console.log('Deadline reminder job shuru hocche...');
   sendDeadlineReminders();
+});
+
+// Protidin 9 tai (21:00) membership type (New/Active/Senior) update korbe
+cron.schedule('0 21 * * *', () => {
+  console.log('Membership update job shuru hocche...');
+  updateMembershipTypes();
 });
 
 const PORT = process.env.PORT || 5000;

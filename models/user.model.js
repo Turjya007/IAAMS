@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['pending', 'approved', 'rejected'],
       default: 'pending' // Registration er por by default pending thakbe
+    },
+    approvedAt: {
+      // kokhon account approve hoyeche, seita save rakhchi
+      // eita membershipType (New/Active/Senior) hisab korte kaje lagbe
+      type: Date
     }
   },
   {
