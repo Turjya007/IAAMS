@@ -8,7 +8,7 @@ async function approveUser(req, res) {
 
     const updatedUser = await userModel.findByIdAndUpdate(
       userId,
-      { status: 'approved' },
+      { status: 'approved' ,approvedAt: new Date()},
       { new: true }
     );
 

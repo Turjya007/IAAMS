@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
       default: 'New Member'
     },
 
-    // ⬇️ Registration verification er jonno
+    // Registration verification er jonno
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected'],
