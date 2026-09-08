@@ -36,8 +36,8 @@ app.get('/api/test', (req, res) => {
 // shudhu test korar jonno — server chalu hole ekbar chalabo
 //sendDeadlineReminders();
 
-// shudhu test korar jonno — server chalu hole ekbar chalabe
-updateMembershipTypes();
+// shudhu test korar jonno — server chalu hole ekbar chalab0
+//updateMembershipTypes();
 
 // Protidin 9 tai (21:00) deadline reminder check korbe
 // cron format: minute hour day month weekday
