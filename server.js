@@ -30,7 +30,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/fund', fundRoutes);
 
 app.get('/api/test', (req, res) => {
-  res.json({ message: 'IAAMS server is running!' });
+  res.json({ message: 'AAMS server is running!' });
 });
 
 // shudhu test korar jonno — server chalu hole ekbar chalabo

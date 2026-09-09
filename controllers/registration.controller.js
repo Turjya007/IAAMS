@@ -75,7 +75,7 @@ async function markAsPaid(req, res) {
 
     // padStart(6, '0') মানে সংখ্যাটাকে 6 digit বানাচ্ছি, সামনে দরকার হলে 0 বসিয়ে
     // যেমন 1 হলে "000001", 25 হলে "000025"
-    const serialNumber = 'IAAMS-' + currentYear + '-' + String(nextNumber).padStart(6, '0');
+    const serialNumber = 'AAMS-' + currentYear + '-' + String(nextNumber).padStart(6, '0');
 
     const updatedRegistration = await registrationModel.findByIdAndUpdate(
       req.params.id,
