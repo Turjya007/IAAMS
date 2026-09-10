@@ -13,7 +13,8 @@ const fundSchema = new mongoose.Schema({
   },
   amount: {
     type: Number,
-    required: true
+    required: true,
+    min: [0.01, 'Amount must be a positive number']
   },
   description: {
     type: String

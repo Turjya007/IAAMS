@@ -238,3 +238,28 @@
   font-weight: 500;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .event-row-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .event-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .show-more-btn {
+    margin-left: 0;
+  }
+
+  .register-form-box {
+    flex-direction: column;
+  }
+
+  .qr-modal-box {
+    max-width: 90%;
+  }
+}

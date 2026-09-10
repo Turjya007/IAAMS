@@ -111,11 +111,13 @@ body {
 }
 
 /* Print korar somoy button ta dekhabe na, karon eta print kore lav nai */
-@media print {
-  .print-btn {
-    display: none;
+@media (max-width: 480px) {
+  .invitation-card {
+    padding: 25px;
   }
-  body {
-    background-color: #ffffff;
+
+  .card-info-row {
+    flex-direction: column;
+    gap: 3px;
   }
 }

@@ -124,8 +124,8 @@ function displayEvents(events) {
     let qrButtonHTML = '';
     
     if (isAdmin) {
-      qrButtonHTML = `<button class="show-qr-btn" onclick="showQRCode('${event._id}', '${event.title}')">Show QR Code</button>
-        <button class="show-qr-btn" onclick="showAttendanceList('${event._id}', '${event.title}')">View Attendance</button>`;
+      qrButtonHTML = `<button class="show-qr-btn" onclick="showQRCode('${event._id}', '${event.title}')">QR Code</button>
+        <button class="show-qr-btn" onclick="showAttendanceList('${event._id}', '${event.title}')">Attendance</button>`;
     }
 
     const rowHTML = `

@@ -10,6 +10,11 @@ async function addFundEntry(req, res) {
       return res.status(400).json({ message: 'Type, category and amount are required' });
     }
 
+    // amount ta positive number kina check kortesi (negative/zero hole reject kortesi)
+    if (Number(amount) <= 0) {
+      return res.status(400).json({ message: 'Amount must be a positive number' });
+    }
+
     const newEntry = await fundModel.create({
       type: type,
       category: category,

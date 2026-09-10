@@ -274,3 +274,58 @@ body {
   font-size: 12px;
   color: var(--text-gray);
 }
+
+/* ============ RESPONSIVE (Mobile) — Sidebar উপরে horizontal bar হয়ে যাবে ============ */
+@media (max-width: 768px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 15px;
+    overflow-x: auto; /* বাটন বেশি হলে পাশে scroll করা যাবে */
+  }
+
+  .sidebar-logo {
+    margin-bottom: 0;
+    margin-right: 15px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-grow: 0;
+    gap: 4px;
+  }
+
+  .nav-btn {
+    white-space: nowrap; /* বাটনের লেখা যেন লাইন ভেঙে না যায় */
+    font-size: 13px;
+  }
+
+  .nav-btn.active {
+    border-left: none;
+    border-bottom: 3px solid var(--green);
+  }
+
+  .logout-btn {
+    flex-shrink: 0;
+    margin-left: 10px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-details {
+    padding: 10px 18px;
+  }
+}

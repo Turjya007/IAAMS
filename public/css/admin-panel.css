@@ -157,3 +157,13 @@
 .entry-expense {
   border-left: 4px solid #c0392b;
 }
+
+@media (max-width: 768px) {
+  .fund-summary-row {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+}

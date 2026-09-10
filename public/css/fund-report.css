@@ -137,15 +137,20 @@ body {
   background-color: var(--green-dark);
 }
 
-/* Print korar somoy button dekhabe na */
-@media print {
-  .print-btn {
-    display: none;
-  }
-  body {
-    background-color: #ffffff;
-  }
+@media (max-width: 768px) {
   .report-content {
-    border: none;
+    padding: 20px;
+  }
+
+  .summary-row {
+    flex-direction: column;
+  }
+
+  /* টেবিলের কলাম বেশি হলে, table টা নিজেই পাশে scroll হবে (ভেঙে যাবে না) */
+  .report-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }
+

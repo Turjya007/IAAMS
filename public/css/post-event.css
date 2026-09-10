@@ -81,3 +81,14 @@
 .submit-btn:hover {
   background-color: var(--green-dark);
 }
+
+@media (max-width: 768px) {
+  .form-box {
+    padding: 20px;
+  }
+
+  .input-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

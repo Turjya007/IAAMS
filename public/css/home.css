@@ -207,3 +207,47 @@ body {
   font-size: 13px;
   border-top: 1px solid var(--border-color);
 }
+
+/* ============ RESPONSIVE (Mobile) ============ */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .hero {
+    height: 400px;
+  }
+
+  .hero-heading {
+    font-size: 26px;
+  }
+
+  .hero-text {
+    font-size: 14px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .hero-btn-filled,
+  .hero-btn-outline {
+    text-align: center;
+  }
+
+  .features {
+    padding: 40px 20px;
+  }
+
+  .section-heading {
+    font-size: 24px;
+  }
+
+  .cta-heading {
+    font-size: 20px;
+  }
+}

@@ -405,6 +405,13 @@ document.getElementById('addFundEntryBtn').addEventListener('click', async funct
     return;
   }
 
+    // amount ta positive number kina check kortesi
+  if (Number(amount) <= 0) {
+    messageBox.textContent = 'Amount must be a positive number.';
+    return;
+  }
+
+
   try {
     const response = await fetch('/api/fund', {
       method: 'POST',
