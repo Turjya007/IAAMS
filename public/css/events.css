@@ -249,6 +249,13 @@
   .event-actions {
     margin-left: 0;
     width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .event-actions > * {
+    flex: 1 1 calc(50% - 5px);
+    text-align: center;
+    box-sizing: border-box;
   }
 
   .show-more-btn {
