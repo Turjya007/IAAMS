@@ -111,7 +111,7 @@ function displayEvents(events) {
     const alreadyRegistered = isAlreadyRegistered(event._id);
 
     // যদি আগে থেকেই register করা থাকে, বাটনের বদলে badge দেখাবো
-    // নাহলে "Register" বাটন দেখাবো
+    // নাহলে "Register" বাটন dekhabe
     let actionHTML = '';
 
     if (alreadyRegistered) {
