@@ -3,6 +3,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const registrationModel = require('../models/registration.model');
 const eventModel = require('../models/event.model');
 const { generateSerialNumber } = require('../controllers/registration.controller'); 
+const fundModel = require('../models/fund.model');
 
 
 
@@ -82,7 +83,7 @@ async function paymentSuccess(req, res) {
     const tran_id = req.body.tran_id;
     const val_id = req.body.val_id;
 
-    const registration = await registrationModel.findOne({ transactionId: tran_id });
+    const registration = await registrationModel.findOne({ transactionId: tran_id }).populate('event');
 
     if (!registration) {
       return res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=notfound');
@@ -90,9 +91,19 @@ async function paymentSuccess(req, res) {
 
     // Age theke paid na thakle, ekhon paid kore dicchi
     if (registration.paymentStatus !== 'paid') {
-      registration.paymentStatus = 'paid';
-      registration.serialNumber = await generateSerialNumber(); // tomar age er serial number generate logic thakle sheta boshao
+       registration.paymentStatus = 'paid';
+      registration.serialNumber = await generateSerialNumber();
       await registration.save();
+
+      // Payment successful hoyeche, tai Fund e automatically ekta income entry jog kortesi
+      await fundModel.create({
+        type: 'income',
+        category: 'Event Registration',
+        amount: registration.event.registrationFee,
+        description: 'Auto: Payment for "' + registration.event.title + '" (Transaction ID: ' + tran_id + ')',
+        event: registration.event._id,
+        addedBy: registration.event.approvedBy
+      });
     }
 
     res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=success');
@@ -123,12 +134,21 @@ async function paymentIPN(req, res) {
 
     // validation.status 'VALID' or 'VALIDATED' hole tobei ashol payment
     if (validation.status === 'VALID' || validation.status === 'VALIDATED') {
-      const registration = await registrationModel.findOne({ transactionId: tran_id });
+          const registration = await registrationModel.findOne({ transactionId: tran_id }).populate('event');
 
       if (registration && registration.paymentStatus !== 'paid') {
         registration.paymentStatus = 'paid';
         registration.serialNumber = await generateSerialNumber();
         await registration.save();
+
+        await fundModel.create({
+          type: 'income',
+          category: 'Event Registration',
+          amount: registration.event.registrationFee,
+          description: 'Auto: Payment for "' + registration.event.title + '" (Transaction ID: ' + tran_id + ')',
+          event: registration.event._id,
+          addedBy: registration.event.approvedBy
+        });
       }
     }
 
