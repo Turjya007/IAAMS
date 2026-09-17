@@ -27,21 +27,21 @@ const eventSchema = new mongoose.Schema({
     required: true,
     default: 0
   },
-  bkashNumber: {                   // ⬅️ নতুন field, টাকা পাঠানোর নম্বর
+  bkashNumber: {                   
     type: String,
     required: true
   },
-  postedBy: {                      // ⬅️ নাম বদলালাম createdBy থেকে postedBy
+  postedBy: {                     
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  status: {                        // ⬅️ নতুন field
+  status: {                        
     type: String,
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
   },
-  approvedBy: {                    // ⬅️ নতুন field, কোন admin approve করলো
+  approvedBy: {                   
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     default: null

@@ -52,7 +52,7 @@ async function getAllEvents(req, res) {
   }
 }
 
-// ============ Pending Event গুলোর লিস্ট (শুধু Admin দেখবে, review করার জন্য) ============
+// ============ Pending Event gular list (shudhu Admin dekhbe, review korar jonno) ============
 async function getPendingEvents(req, res) {
   try {
     const events = await eventModel
@@ -70,7 +70,7 @@ async function getPendingEvents(req, res) {
   }
 }
 
-// ============ Event Approve করা (শুধু Admin) ============
+// ============ Event Approve kora (shudhu Admin) ============
 async function approveEvent(req, res) {
   try {
     const updatedEvent = await eventModel.findByIdAndUpdate(
@@ -97,7 +97,7 @@ async function approveEvent(req, res) {
   }
 }
 
-// ============ Event Reject করা (শুধু Admin) ============
+// ============ Event Reject kora (shudhu Admin) ============
 async function rejectEvent(req, res) {
   try {
     const updatedEvent = await eventModel.findByIdAndUpdate(

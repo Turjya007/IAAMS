@@ -12,16 +12,16 @@ const {
 } = require('../controllers/registration.controller');
 const { verifyToken, isAdmin } = require('../middleware/auth.middleware');
 
-// POST /api/registrations → নতুন event এ register করা (যেকোনো logged-in user)
+// POST /api/registrations → notun event a register koar (jekono logged-in user)
 router.post('/', verifyToken, registerForEvent);
 
-// GET /api/registrations/my → নিজের সব registration দেখা ("My Events")
+// GET /api/registrations/my → Nijer sob registration dekha ("My Events")
 router.get('/my', verifyToken, getMyRegistrations);
 
-// PATCH /api/registrations/:id/mark-paid → payment paid মার্ক করা (শুধু Admin)
+// PATCH /api/registrations/:id/mark-paid → payment paid mark kora (shudhu Admin)
 router.patch('/:id/mark-paid', verifyToken, isAdmin, markAsPaid);
 
-router.get('/pending', verifyToken, isAdmin, getPendingPayments); // ⬅️ নতুন লাইন
+router.get('/pending', verifyToken, isAdmin, getPendingPayments); 
 
 router.get('/:id/invitation-card', verifyToken, getInvitationCardData);
 

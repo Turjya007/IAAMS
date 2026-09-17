@@ -32,13 +32,13 @@ async function addFundEntry(req, res) {
   }
 }
 
-// ============ সব Entry + Summary (total income, expense, balance) আনা ============
+// sob Entry + Summary (total income, expense, balance) ana 
 async function getFundData(req, res) {
   try {
     const allEntries = await fundModel
       .find()
       .populate('addedBy', 'name')
-       .populate('event', 'title')
+      .populate('event', 'title')
       .sort({ createdAt: -1 }); // notun entry uporey dekhabe
 
     // ei duita variable e amra jog kore kore total ber korbo

@@ -117,7 +117,7 @@ function displayEvents(events) {
     if (alreadyRegistered) {
       actionHTML = '<span class="registered-badge">Registered ✓</span>';
     } else {
-      actionHTML = `<button class="register-btn" onclick="toggleRegisterForm(${i})">Register</button>`;
+      actionHTML = `<button class="register-btn" onclick="registerAndPay('${event._id}')">Register</button>`;
     }
 
     // admin hole QR button o dekhabo
@@ -152,13 +152,6 @@ function displayEvents(events) {
           <p class="detail-line"><strong>Posted By:</strong> ${event.postedBy.name}</p>
           <p class="detail-line"><strong>Approved By:</strong> ${event.approvedBy.name}</p>
         </div>
-
-        <!-- Transaction ID ফর্ম, শুরুতে লুকানো -->
-        <div class="register-form-box hidden" id="regForm-${i}">
-          <input type="text" id="txnInput-${i}" placeholder="Enter bKash Transaction ID" />
-          <button class="submit-txn-btn" onclick="submitRegistration(${i}, '${event._id}')">Submit</button>
-        </div>
-        <p class="reg-message" id="regMessage-${i}"></p>
       </div>
     `;
 
@@ -172,56 +165,47 @@ function toggleDetails(index) {
   detailsBox.classList.toggle('hidden');
 }
 
-// ============ "Register" ক্লিক করলে Transaction ID ফর্ম টগল করা ============
-function toggleRegisterForm(index) {
-  const formBox = document.getElementById('regForm-' + index);
-  formBox.classList.toggle('hidden');
-}
 
-// ============ Transaction ID Submit করা ============
-async function submitRegistration(index, eventId) {
-
-  const txnInput = document.getElementById('txnInput-' + index);
-  const messageBox = document.getElementById('regMessage-' + index);
-
-  const transactionId = txnInput.value;
-
-  // খালি রেখে submit করলে আটকাচ্ছি
-  if (transactionId.trim() === '') {
-    messageBox.textContent = 'Please enter your Transaction ID.';
-    messageBox.className = 'reg-message error';
-    return;
-  }
-
+// ============ Register + Payment ekbare shuru kora ============
+async function registerAndPay(eventId) {
   try {
-    const response = await fetch('/api/registrations', {
+    // Step 1: age ekta pending registration banacchi (transactionId chara)
+    const regResponse = await fetch('/api/registrations', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       },
-      body: JSON.stringify({
-        eventId: eventId,
-        transactionId: transactionId
-      })
+      body: JSON.stringify({ eventId: eventId })
     });
 
-    const data = await response.json();
+    const regData = await regResponse.json();
 
-    if (!response.ok) {
-      messageBox.textContent = data.message || 'Registration failed.';
-      messageBox.className = 'reg-message error';
+    if (!regResponse.ok) {
+      alert(regData.message || 'Registration failed.');
       return;
     }
 
-    // সফল হলে registeredEventIds এ যোগ করছি, আর পুরো event লিস্টটা আবার লোড করছি
-    // যাতে বাটনের জায়গায় "Registered ✓" badge দেখা যায়
-    registeredEventIds.push(eventId);
-    loadEvents();
+    const registrationId = regData.registration._id;
+
+    // Step 2: SSLCommerz theke payment page er URL chaichi
+    const payResponse = await fetch('/api/payment/initiate/' + registrationId, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const payData = await payResponse.json();
+
+    if (!payResponse.ok) {
+      alert(payData.message || 'Could not start payment.');
+      return;
+    }
+
+    // Step 3: SSLCommerz er nijer payment page e pathiye dicchi
+    window.location.href = payData.url;
 
   } catch (error) {
-    messageBox.textContent = 'Something went wrong. Please try again.';
-    messageBox.className = 'reg-message error';
+    alert('Something went wrong. Please try again.');
   }
 }
 

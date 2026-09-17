@@ -275,6 +275,23 @@ body {
   color: var(--text-gray);
 }
 
+.payment-status-banner {
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.payment-status-banner.success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.payment-status-banner.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
 /* ============ RESPONSIVE (Mobile) — Sidebar উপরে horizontal bar হয়ে যাবে ============ */
 @media (max-width: 768px) {
   .dashboard-wrapper {

@@ -1,7 +1,7 @@
 // controllers/notification.controller.js
 const notificationModel = require('../models/notification.model');
 
-// ============ নিজের সব Notification আনা ============
+// Nijer sob Notification ana
 async function getMyNotifications(req, res) {
   try {
     const notifications = await notificationModel
@@ -15,7 +15,7 @@ async function getMyNotifications(req, res) {
   }
 }
 
-// ============ সব Notification "read" মার্ক করা ============
+// ============ sob Notification "read" mark kora ============
 async function markNotificationsAsRead(req, res) {
   try {
     // ei user er shob unread notification k ekbare true kore dicchi

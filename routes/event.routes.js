@@ -10,19 +10,19 @@ const {
 } = require('../controllers/event.controller');
 const { verifyToken, isAdmin } = require('../middleware/auth.middleware');
 
-// POST /api/events → Event তৈরি (Admin + Alumni দুজনেই, তাই শুধু verifyToken, isAdmin না)
+// POST /api/events → Event toiri (Admin + Alumni duijon e, tai shudhu verifyToken, isAdmin na)
 router.post('/', verifyToken, createEvent);
 
-// GET /api/events → শুধু approved event এর লিস্ট (সবাই দেখতে পারবে)
+// GET /api/events → shudhu approved event er list (sobai dekhte parbe)
 router.get('/', verifyToken, getAllEvents);
 
-// GET /api/events/pending → pending event গুলোর লিস্ট (শুধু Admin)
+// GET /api/events/pending → pending event gulor list (shudhu Admin)
 router.get('/pending', verifyToken, isAdmin, getPendingEvents);
 
-// PATCH /api/events/approve/:id → Event approve করা (শুধু Admin)
+// PATCH /api/events/approve/:id → Event approve kora (shudhu Admin)
 router.patch('/approve/:id', verifyToken, isAdmin, approveEvent);
 
-// PATCH /api/events/reject/:id → Event reject করা (শুধু Admin)
+// PATCH /api/events/reject/:id → Event reject kora (shudhu Admin)
 router.patch('/reject/:id', verifyToken, isAdmin, rejectEvent);
 
 module.exports = router;

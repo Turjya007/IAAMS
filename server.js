@@ -13,12 +13,14 @@ const fundRoutes = require('./routes/fund.routes');
 const cron = require('node-cron');
 const sendDeadlineReminders = require('./jobs/deadlineReminder.job');
 const updateMembershipTypes = require('./jobs/membershipUpdate.job');
+const paymentRoutes = require('./routes/payment.routes');
 
 const app = express();
 
 connectDB();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));   //SSLCommerz callback (form-urlencoded) receive korar jonno
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ⬇️ new line — /api/auth diye shuru howa shob route ekhon 'authRoutes' e jabe
@@ -28,6 +30,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/fund', fundRoutes);
+app.use('/api/payment', paymentRoutes);
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'AAMS server is running!' });

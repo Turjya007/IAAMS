@@ -14,7 +14,6 @@ const registrationSchema = new mongoose.Schema({
   },
   transactionId: {
     type: String,
-    required: true
   },
   paymentStatus: {
     type: String,
@@ -27,7 +26,7 @@ const registrationSchema = new mongoose.Schema({
   attended: {
     type: Boolean,
     default: false
-    // শুরুতে সবাই false থাকবে, QR স্ক্যান করলেই true হবে
+    // By default false thakbe, QR code scan korle true hobe
   }
 }, { timestamps: true });
 

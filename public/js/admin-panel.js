@@ -120,7 +120,7 @@ async function approveUser(userId) {
     });
 
     if (!response.ok) {
-      alert('Approve করতে সমস্যা হয়েছে।');
+      alert('Approve korte somossa hoyeche।');
       return;
     }
 
@@ -141,7 +141,7 @@ async function rejectUser(userId) {
     });
 
     if (!response.ok) {
-      alert('Reject করতে সমস্যা হয়েছে।');
+      alert('Reject korte somossa hoyeche।');
       return;
     }
 
@@ -159,7 +159,7 @@ document.getElementById('logoutBtn').addEventListener('click', function () {
 });
 
 
-// ============ Pending Events লিস্ট Load করা ============
+// ============ Pending Events list Load kora ============
 async function loadPendingEvents() {
   const container = document.getElementById('pendingEventsContainer');
   container.innerHTML = '<p>Loading...</p>';
@@ -218,7 +218,7 @@ function displayPendingEvents(events) {
   }
 }
 
-// ============ Approve / Reject Event করার Logic ============
+// ============ Approve / Reject Event korar Logic ============
 async function approveEvent(eventId) {
   try {
     const response = await fetch('/api/events/approve/' + eventId, {
@@ -227,7 +227,7 @@ async function approveEvent(eventId) {
     });
 
     if (!response.ok) {
-      alert('Approve করতে সমস্যা হয়েছে।');
+      alert('Approve korte somossa hoyeche');
       return;
     }
 
@@ -246,7 +246,7 @@ async function rejectEvent(eventId) {
     });
 
     if (!response.ok) {
-      alert('Reject করতে সমস্যা হয়েছে।');
+      alert('Reject korte somossa hoyeche');
       return;
     }
 
@@ -256,10 +256,10 @@ async function rejectEvent(eventId) {
     alert('Something went wrong.');
   }
 }
-// পেজ লোড হওয়ার সাথে সাথে প্রথমে Pending Alumni লিস্ট দেখাচ্ছি
+// page load howar sathe sathe prothome Pending Alumni list dekhacchi
 loadPendingUsers();
 
-// ============ Pending Payments লিস্ট Load করা ============
+// ============ Pending Payments list Load kora ============
 async function loadPendingPayments() {
   const container = document.getElementById('paymentsContainer');
   container.innerHTML = '<p>Loading...</p>';
@@ -315,7 +315,7 @@ function displayPendingPayments(registrations) {
   }
 }
 
-// ============ Mark as Paid করার Logic ============
+// ============ Mark as Paid korar Logic ============
 async function markAsPaid(registrationId) {
   try {
     const response = await fetch('/api/registrations/' + registrationId + '/mark-paid', {
@@ -328,8 +328,8 @@ async function markAsPaid(registrationId) {
       return;
     }
 
-    // Mark করার পর লিস্ট আবার লোড করছি,
-    // তাহলে যাকে paid করা হলো সে আর pending লিস্টে দেখাবে না
+    // Mark korar por list abar load korchi,
+    // tahole jake paid kora holo se ar pending lost a dekhabe na
     loadPendingPayments();
 
   } catch (error) {
@@ -339,7 +339,7 @@ async function markAsPaid(registrationId) {
 
 // ============ Fund Management ============
 
-// type (income/expense) অনুযায়ী category dropdown পূরণ করা
+// type (income/expense) onujayi category dropdown puron kora
 const incomeCategories = ['Event Registration Fee', 'Sponsorship', 'Others'];
 const expenseCategories = ['Decoration', 'Food', 'Printing', 'Prizes', 'Others'];
 
@@ -385,7 +385,7 @@ document.getElementById('fundCategorySelect').addEventListener('change', toggleO
 // page load howar shathe shathe ekbar category dropdown purno kore rakhi
 populateCategoryDropdown();
 
-// ============ নতুন Entry Add করা ============
+// ============ notun Entry Add kora ============
 document.getElementById('addFundEntryBtn').addEventListener('click', async function () {
   const type = document.getElementById('fundTypeSelect').value;
   const categorySelectValue = document.getElementById('fundCategorySelect').value;
@@ -466,7 +466,7 @@ async function loadFundData() {
       return;
     }
 
-    // Summary card গুলো আপডেট করছি
+    // Summary card gulo update korchi
     document.getElementById('totalIncomeText').textContent = data.totalIncome + " TK";
     document.getElementById('totalExpenseText').textContent = data.totalExpense + " TK";
     document.getElementById('balanceText').textContent = data.balance + " TK";

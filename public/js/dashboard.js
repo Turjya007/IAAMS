@@ -140,7 +140,6 @@ function displayMyEvents(registrations) {
         <h3 class="my-event-title">${event.title}</h3>
         <p class="my-event-info">Event Date: ${formatDate(event.eventDate)}</p>
         <p class="my-event-info">Place: ${event.place}</p>
-        <p class="my-event-info">Transaction ID: ${reg.transactionId}</p>
         <span class="payment-badge ${reg.paymentStatus}">${reg.paymentStatus.toUpperCase()}</span>
         ${cardButton}
       </div>
@@ -271,3 +270,49 @@ loadProfile();
 
 // পেজ লোড হওয়ার সাথে সাথে unread notification আছে কিনা চেক করছি (dot দেখানোর জন্য)
 checkUnreadNotifications();
+
+// ============ Payment theke ferar por status check kora ============
+function checkPaymentStatus() {
+  const params = new URLSearchParams(window.location.search);
+  const paymentStatus = params.get('payment');
+
+  if (!paymentStatus) {
+    return; // URL e payment param nai, tai kisu korar dorkar nai
+  }
+
+  let message = '';
+  let messageClass = '';
+
+  if (paymentStatus === 'success') {
+    message = '✅ Payment successful! Your registration is now confirmed.';
+    messageClass = 'success';
+  } else if (paymentStatus === 'failed') {
+    message = '❌ Payment failed. Please try registering again.';
+    messageClass = 'error';
+  } else if (paymentStatus === 'cancelled') {
+    message = '⚠️ Payment was cancelled.';
+    messageClass = 'error';
+  } else {
+    return; // onno kono unknown value hole kisu dekhabo na
+  }
+
+  // ekta message banner banacchi, upore boshiye dicchi
+  const banner = document.createElement('p');
+  banner.textContent = message;
+  banner.className = 'payment-status-banner ' + messageClass;
+
+  const mainContent = document.querySelector('.main-content');
+  mainContent.insertBefore(banner, mainContent.firstChild);
+
+  // "My Events" tab e switch kore dicchi, jate result soja dekhte pai
+  const myEventsButton = document.querySelector('.nav-btn[data-section="myEvents"]');
+  if (myEventsButton) {
+    myEventsButton.click();
+  }
+
+  // URL theke ?payment=... mucche dicchi, jate refresh korle abar message na dekhay
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+// পেজ লোড হওয়ার সাথে সাথে payment status check করছি
+checkPaymentStatus();
