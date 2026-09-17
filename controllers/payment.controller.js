@@ -5,6 +5,7 @@ const eventModel = require('../models/event.model');
 const { generateSerialNumber } = require('../controllers/registration.controller'); 
 
 
+
 const store_id = process.env.SSLCZ_STORE_ID;
 const store_passwd = process.env.SSLCZ_STORE_PASSWORD;
 const is_live = false; // sandbox mode, tai always false rakhchi ekhon
@@ -84,7 +85,7 @@ async function paymentSuccess(req, res) {
     const registration = await registrationModel.findOne({ transactionId: tran_id });
 
     if (!registration) {
-      return res.redirect(process.env.APP_BASE_URL + '/my-events.html?payment=notfound');
+      return res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=notfound');
     }
 
     // Age theke paid na thakle, ekhon paid kore dicchi
@@ -94,21 +95,21 @@ async function paymentSuccess(req, res) {
       await registration.save();
     }
 
-    res.redirect(process.env.APP_BASE_URL + '/my-events.html?payment=success');
+    res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=success');
 
   } catch (error) {
-    res.redirect(process.env.APP_BASE_URL + '/my-events.html?payment=error');
+    res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=error');
   }
 }
 
 // Step 3: Payment FAIL hole
 function paymentFail(req, res) {
-  res.redirect(process.env.APP_BASE_URL + '/my-events.html?payment=failed');
+  res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=failed');
 }
 
 // Step 4: Payment CANCEL hole (user nije cancel korle)
 function paymentCancel(req, res) {
-  res.redirect(process.env.APP_BASE_URL + '/my-events.html?payment=cancelled');
+  res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=cancelled');
 }
 
 // Step 5: IPN — SSLCommerz er server nije theke ei route e call kore (eitai shobcheye important o reliable)
