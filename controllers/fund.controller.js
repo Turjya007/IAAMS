@@ -40,7 +40,7 @@ async function addFundEntry(req, res) {
 
       if (Number(amount) > currentBalance) {
         return res.status(400).json({
-          message: 'Expense (৳' + amount + ') exceeds current balance (৳' + currentBalance + ')'
+          message: 'Expense (TK ' + amount + ') exceeds current balance (TK ' + currentBalance + ')'
         });
       }
     }
