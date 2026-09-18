@@ -6,7 +6,8 @@ const {
   getAllEvents,
   getPendingEvents,
   approveEvent,
-  rejectEvent
+  rejectEvent,
+  deleteEvent
 } = require('../controllers/event.controller');
 const { verifyToken, isAdmin } = require('../middleware/auth.middleware');
 
@@ -24,5 +25,8 @@ router.patch('/approve/:id', verifyToken, isAdmin, approveEvent);
 
 // PATCH /api/events/reject/:id → Event reject kora (shudhu Admin)
 router.patch('/reject/:id', verifyToken, isAdmin, rejectEvent);
+
+// DELETE /api/events/:id → Event delete kora (shudhu Admin)
+router.delete('/:id', verifyToken, isAdmin, deleteEvent);
 
 module.exports = router;

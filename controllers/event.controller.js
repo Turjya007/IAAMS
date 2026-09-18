@@ -1,6 +1,8 @@
 // controllers/event.controller.js
 const eventModel = require('../models/event.model');
 const notificationModel = require('../models/notification.model');
+const registrationModel = require('../models/registration.model'); 
+const userModel = require('../models/user.model');
 
 // Event creat kora (ekhon Admin ar Alumni duijon e parbe) 
 async function createEvent(req, res) {
@@ -117,4 +119,51 @@ async function rejectEvent(req, res) {
   }
 }
 
-module.exports = { createEvent, getAllEvents, getPendingEvents, approveEvent, rejectEvent };
+// ============ Event Delete kora (shudhu Admin) ============
+async function deleteEvent(req, res) {
+  try {
+    const eventId = req.params.id;
+
+    const event = await eventModel.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    // ei event er shob registration khujchi, notification pathanor age
+    const registrations = await registrationModel.find({ event: eventId });
+
+    // protita affected alumni ke ekta notification pathacchi
+    for (let i = 0; i < registrations.length; i++) {
+      await notificationModel.create({
+        user: registrations[i].user,
+        message: `The event "${event.title}" has been cancelled. If you have already paid, please contact the Department of CSE at IUBAT for a refund.`,
+        type: 'event_cancelled'
+      });
+    }
+
+    // ekhon shob registration delete kortesi
+    await registrationModel.deleteMany({ event: eventId });
+
+    // event ta jei postCoreche, se jodi Alumni hoy tahole take o notification pathacchi
+    // (Admin nijei post kore thakle notification pathanor dorkar nai)
+    const eventPoster = await userModel.findById(event.postedBy);
+
+    if (eventPoster && eventPoster.role === 'alumni') {
+      await notificationModel.create({
+        user: event.postedBy,
+        message: `Your event "${event.title}" has been deleted by admin.`,
+        type: 'event_cancelled'
+      });
+    }
+
+    // shobsheshe event ta nijei delete kortesi
+    await eventModel.findByIdAndDelete(eventId);
+
+    res.status(200).json({ message: 'Event and its registrations deleted, alumni notified' });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+module.exports = { createEvent, getAllEvents, getPendingEvents, approveEvent, rejectEvent, deleteEvent };

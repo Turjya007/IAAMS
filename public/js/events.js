@@ -122,11 +122,14 @@ function displayEvents(events) {
 
     // admin hole QR button o dekhabo
     let qrButtonHTML = '';
-    
+
     if (isAdmin) {
-      qrButtonHTML = `<button class="show-qr-btn" onclick="showQRCode('${event._id}', '${event.title}')">QR Code</button>
-        <button class="show-qr-btn" onclick="showAttendanceList('${event._id}', '${event.title}')">Attendance</button>`;
-    }
+  qrButtonHTML = `<button class="show-qr-btn" onclick="showQRCode('${event._id}', '${event.title}')">QR Code</button>
+
+    <button class="show-qr-btn" onclick="showAttendanceList('${event._id}', '${event.title}')">Attendance</button>
+
+    <button class="show-qr-btn" style="background-color: #dc2626;" onclick="deleteEvent('${event._id}', '${event.title}')">Delete</button>`;
+}
 
     const rowHTML = `
       <div class="event-row">
@@ -283,6 +286,39 @@ async function showAttendanceList(eventId, eventTitle) {
 
 function closeAttendanceModal() {
   document.getElementById('attendanceModalOverlay').classList.add('hidden');
+}
+
+// ============ Event Delete kora (shudhu Admin) ============
+async function deleteEvent(eventId, eventTitle) {
+
+  // vul kore click hole jate accident e delete na hoy, tai confirm korchi
+  const confirmed = confirm('Are you sure you want to delete "' + eventTitle + '"? This will also delete all registrations for this event, and registered alumni will be notified.');
+
+  if (!confirmed) {
+    return; // "Cancel" chapley ekhane e theme jabe
+  }
+
+  try {
+    const response = await fetch('/api/events/' + eventId, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message || 'Could not delete event.');
+      return;
+    }
+
+    alert('Event deleted successfully.');
+
+    // list ta abar load kortesi, jate delete kora event ta ar na dekhay
+    loadEvents();
+
+  } catch (error) {
+    alert('Something went wrong.');
+  }
 }
 
 // ============ পেজ লোড হওয়ার সাথে সাথে দুটো কাজ ============

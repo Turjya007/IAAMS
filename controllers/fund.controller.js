@@ -1,6 +1,25 @@
 // controllers/fund.controller.js
 const fundModel = require('../models/fund.model');
 
+// Current balance ber kora — eita 2 jaigai lagbe (addFundEntry validation ar getFundData),
+// tai alada function baniye rakhtesi
+async function getCurrentBalance() {
+  const allEntries = await fundModel.find();
+
+  let totalIncome = 0;
+  let totalExpense = 0;
+
+  for (let i = 0; i < allEntries.length; i++) {
+    if (allEntries[i].type === 'income') {
+      totalIncome = totalIncome + allEntries[i].amount;
+    } else {
+      totalExpense = totalExpense + allEntries[i].amount;
+    }
+  }
+
+  return totalIncome - totalExpense;
+}
+
 // ============ নতুন Income/Expense Entry যোগ করা ============
 async function addFundEntry(req, res) {
   try {
@@ -13,6 +32,17 @@ async function addFundEntry(req, res) {
     // amount ta positive number kina check kortesi (negative/zero hole reject kortesi)
     if (Number(amount) <= 0) {
       return res.status(400).json({ message: 'Amount must be a positive number' });
+    }
+
+    // notun code — expense hole current balance-er beshi kina check kortesi
+    if (type === 'expense') {
+      const currentBalance = await getCurrentBalance();
+
+      if (Number(amount) > currentBalance) {
+        return res.status(400).json({
+          message: 'Expense (৳' + amount + ') exceeds current balance (৳' + currentBalance + ')'
+        });
+      }
     }
 
     const newEntry = await fundModel.create({

@@ -16,7 +16,7 @@ const notificationSchema = new mongoose.Schema({
   type: {
     // kon dhoroner notification, eita frontend e icon/color select korte kaje lagbe
     type: String,
-    enum: ['event_approved', 'payment_confirmed', 'deadline_reminder'],
+        enum: ['event_approved', 'payment_confirmed', 'deadline_reminder', 'event_cancelled'],
     required: true
   },
   isRead: {
