@@ -9,6 +9,17 @@ async function createEvent(req, res) {
   try {
     const { title, description, place, eventDate, registrationDeadline, registrationFee, bkashNumber } = req.body;
 
+    // bKash number thik format e ache kina check kortesi by using regular expression (regex)
+    // Bangladeshi mobile number: 01 diye shuru, tarpor 9 ta digit (mot 11 digit), shudhu number
+    const bkashNumberPattern = /^01[0-9]{9}$/;
+
+    if (!bkashNumberPattern.test(bkashNumber)) {
+      return res.status(400).json({
+        message: 'bKash number must be exactly 11 digits and start with 01 (e.g., 01712345678)'
+      });
+    }
+
+
     // Admin/Alumni jei hok, sobar post "pending" diye shuru hobe
     const newEvent = await eventModel.create({
       title: title,

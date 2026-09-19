@@ -4,7 +4,7 @@ const notificationModel = require('../models/notification.model');
 const eventModel = require('../models/event.model');
 
 
-// Serial number banano — eita ekhon 2 jaigai lagbe (markAsPaid ar payment.controller),
+// Serial number banano — eita  2 jaigai lagbe (markAsPaid ar payment.controller),
 // tai alada function baniye export kore dicchi
 async function generateSerialNumber() {
   const paidCount = await registrationModel.countDocuments({ paymentStatus: 'paid' });

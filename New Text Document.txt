@@ -1,30 +1,15 @@
-bKash (sandbox payment page-এ bKash select করলে):
-
-Mobile Number: 01770618575 (successful payment টেস্ট করতে) — বিকল্প: 01929918378, 01619777282
+[[[[    bKash (sandbox payment page-e bKash select korle):
+Mobile Number: 01770618575 (successful payment test korte) — bikolpo: 01929918378, 01619777282
 OTP: 123456
 PIN: 12121
 
-Payment fail হলে কেমন দেখায় সেটাও টেস্ট করতে চাইলে এই number ব্যবহার করো:
+Payment fail hole seta test korte chaile ei number use korte hobe:
+01823074817 → Insufficient Balance error simulate korbe
+01823074818 → Debit Block error simulate korbe
 
-01823074817 → Insufficient Balance error simulate করবে
-01823074818 → Debit Block error simulate করবে
-
-Card দিয়ে টেস্ট করতে চাইলে (Visa):
-
+Card diye test korte chaile (Visa):
 Card Number: 4111111111111111
 Expiry: 12/25, CVV: 111
-OTP: 111111 অথবা 123456
+OTP: 111111 othoba  123456    ]]]]
 
-সংক্ষেপে: payment page-এ পৌঁছে bKash select করে উপরের নম্বর, PIN আর OTP বসিয়ে দিলেই "successful payment" simulate হয়ে যাবে — real bKash balance-এর কোনো দরকারই নেই, পুরোটাই fake/simulated।
-
-একটা জিনিস মনে করিয়ে দিই — এই টেস্ট করার পর paymentSuccess/paymentIPN ঠিকভাবে কাজ করছে কিনা দেখতে, MongoDB Atlas-এ গিয়ে (বা console.log বসিয়ে) registration.paymentStatus === 'paid' আর serialNumber ঠিকমতো বসছে কিনা check করে নিও।
-
-Accha. Ami render a abar notun kore deploy korlam ekhon kaj korche. 
-
-1. age jeta hoto seta hocche jokhon alumni register korto tokhon admin-panel er payment section a dekha jaito je ke register korlo. Tokhon admin mark as paid korle alumni invitation card patio. Ekhon payment korar por admin-panel a payment option tar info ashtese na. So admin mark as paid korte parche na. Direct alumni envitation card peye jacche. Its like mark as paid korar option ta dorkar nei. 
-
-2. Ekhon jodi only payment successful na hoi tahole admin-panel er er payment section a seta dekha jacche. Mark as paid kora jacche. 
-
-3. Another thing is, ei vabe jodi direct pay hoye jai, ke ke pay korlo admin to bujhte parbe na. Admin jante e parbe na je kon event er jonno ke ke register koreche. 
-
-4. Ar ekhon register to hoye jacche. But sei taka to balance a add hocche na. So ke ke register korlo and koi jon register korlo eta na jene ami to taka o add korte parbo na. 
+-----------------------------------------------------------------------
