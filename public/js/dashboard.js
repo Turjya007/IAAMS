@@ -4,16 +4,16 @@ if (!token) {
   window.location.href = 'login.html';
 }
 
-// ============ Sidebar ট্যাব সুইচ করার Logic ============
+// ============ Sidebar tab switch korar Logic ============
 
-// সব nav বাটন খুঁজে বের করছি
+// sob nav button khuje ber korchi
 const navButtons = document.querySelectorAll('.nav-btn');
 
-// প্রতিটা বাটনে ক্লিক listener বসাচ্ছি
+// protita button a listener boshacchi
 navButtons.forEach(function (button) {
   button.addEventListener('click', function () {
 
-    // প্রথমে সব বাটন থেকে "active" class সরিয়ে ফেলছি
+    // 1st a sib button a "active" class shoracchi
     navButtons.forEach(function (btn) {
       btn.classList.remove('active');
     });
@@ -284,7 +284,7 @@ function checkPaymentStatus() {
   let messageClass = '';
 
   if (paymentStatus === 'success') {
-    message = '✅ Payment successful! Your registration is now confirmed.';
+    message = '✔️ Payment successful! Your registration is now confirmed.';
     messageClass = 'success';
   } else if (paymentStatus === 'failed') {
     message = '❌ Payment failed. Please try registering again.';

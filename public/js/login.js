@@ -39,12 +39,11 @@ loginForm.addEventListener('submit', async function (event) {
     // Login shofol hole server amader ekta "token" (JWT) send kore
     // ei token localStorage a save hoi
     //
-    // localStorage কী: এটা browser এর নিজের একটা ছোট storage জায়গা,
-    // যেখানে key-value আকারে ডেটা সেভ থাকে, আর পেজ reload/close করলেও
-    // ডেটা মুছে যায় না (যতক্ষণ না নিজে মুছে ফেলা হয়)।
-    // পরে যখন আমরা admin/alumni dashboard বানাবো, তখন এই token টা
-    // প্রতিটা protected API call এর সাথে পাঠাতে হবে, যাতে সার্ভার বুঝতে
-    // পারে কে login করা আছে।
+    // localStorage ki: eta browser er ekyta choto storage
+    // joto khon na nije data muche fela na hoi totokhon data localStorage a thake even after refresh
+    // pore jokhon admin/alumni dashboard banabo, tokhon ei token ta
+    // protota protected API call er sathe send korte hobe,
+    // ete server bujhte pare je ke login korche।
     localStorage.setItem('iaamsToken', data.token);
 
     successMsg.textContent = 'Login successful!';
@@ -52,8 +51,8 @@ loginForm.addEventListener('submit', async function (event) {
 
     alert('Login successful!');
 
-    // আপাতত role যাই হোক, সবাইকে dashboard.html এ পাঠাচ্ছি
-    // পরে admin-dashboard.html বানানোর পর এখানে role অনুযায়ী ভাগ করে দিব:
+  
+
     // if (data.user.role === 'admin') { window.location.href = 'admin-dashboard.html'; }
     // else { window.location.href = 'dashboard.html'; }
     window.location.href = 'dashboard.html';
