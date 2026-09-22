@@ -100,7 +100,7 @@ async function markAsPaid(req, res) {
 async function getPendingPayments(req, res) {
   try {
     const pendingRegistrations = await registrationModel
-      .find({ paymentStatus: 'pending' })
+      .find({ paymentStatus: 'pending', riskFlagged: true })
       .populate('event', 'title registrationFee') // event er title ebong registrationFee anchi
       .populate('user', 'name email') // sudhu user er name, email anchi
       .sort({ createdAt: -1 });

@@ -16,7 +16,6 @@ async function initiatePayment(req, res) {
   try {
     const registrationId = req.params.registrationId;
 
-    // Registration ta khuje ber kora, event ar user er info soho
     const registration = await registrationModel
       .findById(registrationId)
       .populate('event')
@@ -30,16 +29,10 @@ async function initiatePayment(req, res) {
       return res.status(400).json({ message: 'This registration is already paid' });
     }
 
-    // Notun ekta unique transaction ID nije theke generate kortesi
-    // (age user hater lekha transaction ID dito, ekhon system nije banabe)
     const tran_id = 'AAMS_' + registration._id + '_' + Date.now();
-
-    // Registration er vitore ei notun tran_id ta save kore rakhtesi
-    // jate pore success/IPN e ei tran_id diye registration ta khuje ber kora jai
     registration.transactionId = tran_id;
     await registration.save();
 
-    // SSLCommerz ke ja ja info dite hoy (onek field, kintu shobgulai eder rule onujayi lagbe)
     const data = {
       total_amount: registration.event.registrationFee,
       currency: 'BDT',
@@ -48,7 +41,7 @@ async function initiatePayment(req, res) {
       fail_url: process.env.APP_BASE_URL + '/api/payment/fail',
       cancel_url: process.env.APP_BASE_URL + '/api/payment/cancel',
       ipn_url: process.env.APP_BASE_URL + '/api/payment/ipn',
-      shipping_method: 'NO', // amader kono product ship korte hoy na, tai 'NO'
+      shipping_method: 'NO',
       product_name: registration.event.title,
       product_category: 'Event Registration',
       product_profile: 'general',
@@ -58,7 +51,7 @@ async function initiatePayment(req, res) {
       cus_city: 'Dhaka',
       cus_postcode: '1000',
       cus_country: 'Bangladesh',
-      cus_phone: '01700000000', // Alumni er number na thakle placeholder
+      cus_phone: '01700000000',
       ship_name: registration.user.name,
       ship_add1: 'Dhaka',
       ship_city: 'Dhaka',
@@ -69,12 +62,54 @@ async function initiatePayment(req, res) {
     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
     const apiResponse = await sslcz.init(data);
 
-    // apiResponse er vitore GatewayPageURL thake, ei URL e user ke pathate hobe
     res.status(200).json({ url: apiResponse.GatewayPageURL });
 
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
   }
+}
+
+// ============ Shared function — payment validate kore ki obostha (success/risk/invalid) seta decide kora ============
+// paymentSuccess ar paymentIPN — duitai eituku e use korbe, tai alada kore rakhchi
+async function confirmPayment(tran_id, val_id) {
+  const registration = await registrationModel.findOne({ transactionId: tran_id }).populate('event');
+
+  if (!registration) {
+    return { status: 'notfound' };
+  }
+
+  if (registration.paymentStatus === 'paid') {
+    return { status: 'success' };
+  }
+
+  const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+  const validation = await sslcz.validate({ val_id: val_id });
+
+  if (validation.status !== 'VALID' && validation.status !== 'VALIDATED') {
+    return { status: 'invalid' };
+  }
+
+  // risk_level "0" mane safe, onno kichu (jemon "1") mane risky
+  if (validation.risk_level && String(validation.risk_level) !== '0') {
+    registration.riskFlagged = true;
+    await registration.save();
+    return { status: 'risk' };
+  }
+
+  registration.paymentStatus = 'paid';
+  registration.serialNumber = await generateSerialNumber();
+  await registration.save();
+
+  await fundModel.create({
+    type: 'income',
+    category: 'Event Registration',
+    amount: registration.event.registrationFee,
+    description: 'Auto: Payment for "' + registration.event.title + '" (Transaction ID: ' + tran_id + ')',
+    event: registration.event._id,
+    addedBy: registration.event.approvedBy
+  });
+
+  return { status: 'success' };
 }
 
 // Step 2: Payment SUCCESS hole SSLCommerz ei route e user ke pathabe
@@ -83,30 +118,9 @@ async function paymentSuccess(req, res) {
     const tran_id = req.body.tran_id;
     const val_id = req.body.val_id;
 
-    const registration = await registrationModel.findOne({ transactionId: tran_id }).populate('event');
+    const result = await confirmPayment(tran_id, val_id);
 
-    if (!registration) {
-      return res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=notfound');
-    }
-
-    // Age theke paid na thakle, ekhon paid kore dicchi
-    if (registration.paymentStatus !== 'paid') {
-       registration.paymentStatus = 'paid';
-      registration.serialNumber = await generateSerialNumber();
-      await registration.save();
-
-      // Payment successful hoyeche, tai Fund e automatically ekta income entry jog kortesi
-      await fundModel.create({
-        type: 'income',
-        category: 'Event Registration',
-        amount: registration.event.registrationFee,
-        description: 'Auto: Payment for "' + registration.event.title + '" (Transaction ID: ' + tran_id + ')',
-        event: registration.event._id,
-        addedBy: registration.event.approvedBy
-      });
-    }
-
-    res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=success');
+    res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=' + result.status);
 
   } catch (error) {
     res.redirect(process.env.APP_BASE_URL + '/dashboard.html?payment=error');
@@ -129,28 +143,7 @@ async function paymentIPN(req, res) {
     const tran_id = req.body.tran_id;
     const val_id = req.body.val_id;
 
-    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
-    const validation = await sslcz.validate({ val_id: val_id });
-
-    // validation.status 'VALID' or 'VALIDATED' hole tobei ashol payment
-    if (validation.status === 'VALID' || validation.status === 'VALIDATED') {
-          const registration = await registrationModel.findOne({ transactionId: tran_id }).populate('event');
-
-      if (registration && registration.paymentStatus !== 'paid') {
-        registration.paymentStatus = 'paid';
-        registration.serialNumber = await generateSerialNumber();
-        await registration.save();
-
-        await fundModel.create({
-          type: 'income',
-          category: 'Event Registration',
-          amount: registration.event.registrationFee,
-          description: 'Auto: Payment for "' + registration.event.title + '" (Transaction ID: ' + tran_id + ')',
-          event: registration.event._id,
-          addedBy: registration.event.approvedBy
-        });
-      }
-    }
+    await confirmPayment(tran_id, val_id);
 
     res.status(200).send('IPN received');
 

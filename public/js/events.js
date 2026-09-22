@@ -30,29 +30,33 @@ async function checkAdminAndShowLink() {
   }
 }
 
-// ei array te jei event gulo te ami age thekei register korechi, tader ID joma thakbe
-let registeredEventIds = [];
+// age: let registeredEventIds = [];
+// ekhon eita diye replace koro:
+let myRegistrationsMap = {};
 
 // ============ ami jei event gulote register korechi, tader ID gulo anchi ============
 async function loadRegisteredEventIds() {
   try {
-    const response = await fetch("/api/registrations/my", {
-      method: "GET",
-      headers: { Authorization: "Bearer " + token },
+    const response = await fetch('/api/registrations/my', {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token }
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      return; // fail korle empty array e thakbe
+      return;
     }
 
-    // data holo registration er ekta array, protitar vitore populate kora event ache
     for (let i = 0; i < data.length; i++) {
-      registeredEventIds.push(data[i].event._id);
+      myRegistrationsMap[data[i].event._id] = {
+        registrationId: data[i]._id,
+        paymentStatus: data[i].paymentStatus
+      };
     }
+
   } catch (error) {
-    console.log("Error loading registered events:", error);
+    console.log('Error loading registered events:', error);
   }
 }
 
@@ -88,15 +92,7 @@ function formatDate(dateString) {
   });
 }
 
-// ============ ekta event er ID age theke registeredEventIds e ache ki na check kora ============
-function isAlreadyRegistered(eventId) {
-  for (let i = 0; i < registeredEventIds.length; i++) {
-    if (registeredEventIds[i] === eventId) {
-      return true;
-    }
-  }
-  return false;
-}
+
 
 // ============ sob event ke row baniye page a boshano ============
 function displayEvents(events) {
@@ -110,16 +106,20 @@ function displayEvents(events) {
 
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
-    const alreadyRegistered = isAlreadyRegistered(event._id);
 
-    // jodi age thekei register kora thake, button er bodole badge dekhabo
-    // nahole "Register" button dekhabe
-    let actionHTML = "";
+        const myReg = myRegistrationsMap[event._id];
 
-    if (alreadyRegistered) {
+    let actionHTML = '';
+
+    if (!myReg) {
+      // ekhono kokhono register e kora hoy nai
+      actionHTML = `<button class="register-btn" onclick="registerAndPay('${event._id}')">Register</button>`;
+    } else if (myReg.paymentStatus === 'paid') {
+      // successfully paid
       actionHTML = '<span class="registered-badge">Registered ✓</span>';
     } else {
-      actionHTML = `<button class="register-btn" onclick="registerAndPay('${event._id}')">Register</button>`;
+      // registration ache kintu payment fail/cancel/pending — abar pay korar option
+      actionHTML = `<button class="register-btn" onclick="resumePayment('${myReg.registrationId}')">Complete Payment</button>`;
     }
 
     // admin hole QR button o dekhabo
@@ -209,6 +209,28 @@ async function registerAndPay(eventId) {
     window.location.href = payData.url;
   } catch (error) {
     alert("Something went wrong. Please try again.");
+  }
+}
+
+// ============ Age theke thaka pending registration diye abar Payment shuru kora ============
+async function resumePayment(registrationId) {
+  try {
+    const payResponse = await fetch('/api/payment/initiate/' + registrationId, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const payData = await payResponse.json();
+
+    if (!payResponse.ok) {
+      alert(payData.message || 'Could not start payment.');
+      return;
+    }
+
+    window.location.href = payData.url;
+
+  } catch (error) {
+    alert('Something went wrong. Please try again.');
   }
 }
 

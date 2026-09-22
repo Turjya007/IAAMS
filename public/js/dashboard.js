@@ -297,19 +297,22 @@ function checkPaymentStatus() {
   let message = "";
   let messageClass = "";
 
-  if (paymentStatus === "success") {
-    message = "✔️ Payment successful! Your registration is now confirmed.";
-    messageClass = "success";
-  } else if (paymentStatus === "failed") {
-    message = "❌ Payment failed. Please try registering again.";
-    messageClass = "error";
-  } else if (paymentStatus === "cancelled") {
-    message = "⚠️ Payment was cancelled.";
-    messageClass = "error";
+    if (paymentStatus === 'success') {
+    message = '✅ Payment successful! Your registration is now confirmed.';
+    messageClass = 'success';
+  } else if (paymentStatus === 'risk') {
+    message = '⏳ Your payment is under review by the admin. You will be notified once confirmed.';
+    messageClass = 'error';
+  } else if (paymentStatus === 'failed') {
+    message = '❌ Payment failed. Please try registering again.';
+    messageClass = 'error';
+  } else if (paymentStatus === 'cancelled') {
+    message = '⚠️ Payment was cancelled.';
+    messageClass = 'error';
   } else {
-    return; // onno kono unknown value hole kisu dekhabo na
+    return;
   }
-
+  
   // ekta message banner banacchi, upore boshiye dicchi
   const banner = document.createElement("p");
   banner.textContent = message;
