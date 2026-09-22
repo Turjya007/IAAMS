@@ -1,34 +1,42 @@
-const token = localStorage.getItem('iaamsToken');
+const token = localStorage.getItem("iaamsToken");
 
 if (!token) {
-  window.location.href = 'login.html';
+  window.location.href = "login.html";
 }
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
-  return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 async function loadReport() {
   try {
-    const response = await fetch('/api/fund', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/fund", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      document.getElementById('loadingMessage').innerText = data.message || 'Could not load report.';
+      document.getElementById("loadingMessage").innerText =
+        data.message || "Could not load report.";
       return;
     }
 
     // ============ Summary বসানো ============
-    document.getElementById('sumTotalIncome').innerText = 'TK' + data.totalIncome;
-    document.getElementById('sumTotalExpense').innerText = 'TK' + data.totalExpense;
-    document.getElementById('sumBalance').innerText = 'TK' + data.balance;
+    document.getElementById("sumTotalIncome").innerText =
+      "TK" + data.totalIncome;
+    document.getElementById("sumTotalExpense").innerText =
+      "TK" + data.totalExpense;
+    document.getElementById("sumBalance").innerText = "TK" + data.balance;
 
-    document.getElementById('reportGeneratedDate').innerText = 'Generated on: ' + formatDate(new Date());
+    document.getElementById("reportGeneratedDate").innerText =
+      "Generated on: " + formatDate(new Date());
 
     buildIncomeBreakdown(data.entries);
     buildExpenseBreakdown(data.entries);
@@ -36,11 +44,11 @@ async function loadReport() {
     buildLedger(data.entries);
 
     // sob taiyar hoye gele, loading message lukiye report dekhacchi
-    document.getElementById('loadingMessage').classList.add('hidden');
-    document.getElementById('reportContent').classList.remove('hidden');
-
+    document.getElementById("loadingMessage").classList.add("hidden");
+    document.getElementById("reportContent").classList.remove("hidden");
   } catch (error) {
-    document.getElementById('loadingMessage').innerText = 'Something went wrong.';
+    document.getElementById("loadingMessage").innerText =
+      "Something went wrong.";
   }
 }
 
@@ -51,15 +59,16 @@ function buildIncomeBreakdown(entries) {
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i];
 
-    if (entry.type === 'income') {
+    if (entry.type === "income") {
       if (categoryTotals[entry.category] === undefined) {
         categoryTotals[entry.category] = 0;
       }
-      categoryTotals[entry.category] = categoryTotals[entry.category] + entry.amount;
+      categoryTotals[entry.category] =
+        categoryTotals[entry.category] + entry.amount;
     }
   }
 
-  fillBreakdownTable('incomeBreakdownTable', categoryTotals);
+  fillBreakdownTable("incomeBreakdownTable", categoryTotals);
 }
 
 // ============ Expense Breakdown (category onujayi joga kora) ============
@@ -69,21 +78,22 @@ function buildExpenseBreakdown(entries) {
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i];
 
-    if (entry.type === 'expense') {
+    if (entry.type === "expense") {
       if (categoryTotals[entry.category] === undefined) {
         categoryTotals[entry.category] = 0;
       }
-      categoryTotals[entry.category] = categoryTotals[entry.category] + entry.amount;
+      categoryTotals[entry.category] =
+        categoryTotals[entry.category] + entry.amount;
     }
   }
 
-  fillBreakdownTable('expenseBreakdownTable', categoryTotals);
+  fillBreakdownTable("expenseBreakdownTable", categoryTotals);
 }
 
 // income ar expense breakdown, duitar jonnoi ei ekoi function kaje lagbe
 // (category -> total emon object pele, table er tbody te row bosiye dey)
 function fillBreakdownTable(tableId, categoryTotals) {
-  const tbody = document.getElementById(tableId).querySelector('tbody');
+  const tbody = document.getElementById(tableId).querySelector("tbody");
 
   const categoryNames = Object.keys(categoryTotals); // shob category er naam ekta array te
 
@@ -92,13 +102,13 @@ function fillBreakdownTable(tableId, categoryTotals) {
     return;
   }
 
-  tbody.innerHTML = '';
+  tbody.innerHTML = "";
 
   for (let i = 0; i < categoryNames.length; i++) {
     const name = categoryNames[i];
     const total = categoryTotals[name];
 
-    tbody.innerHTML += '<tr><td>' + name + '</td><td>TK' + total + '</td></tr>';
+    tbody.innerHTML += "<tr><td>" + name + "</td><td>TK" + total + "</td></tr>";
   }
 }
 
@@ -110,7 +120,7 @@ function buildEventWiseTable(entries) {
     const entry = entries[i];
 
     // event thakle tar title, na thakle "General / No Event"
-    let eventName = 'General / No Event';
+    let eventName = "General / No Event";
     if (entry.event) {
       eventName = entry.event.title;
     }
@@ -119,14 +129,18 @@ function buildEventWiseTable(entries) {
       eventTotals[eventName] = { income: 0, expense: 0 };
     }
 
-    if (entry.type === 'income') {
-      eventTotals[eventName].income = eventTotals[eventName].income + entry.amount;
+    if (entry.type === "income") {
+      eventTotals[eventName].income =
+        eventTotals[eventName].income + entry.amount;
     } else {
-      eventTotals[eventName].expense = eventTotals[eventName].expense + entry.amount;
+      eventTotals[eventName].expense =
+        eventTotals[eventName].expense + entry.amount;
     }
   }
 
-  const tbody = document.getElementById('eventWiseTable').querySelector('tbody');
+  const tbody = document
+    .getElementById("eventWiseTable")
+    .querySelector("tbody");
   const eventNames = Object.keys(eventTotals);
 
   if (eventNames.length === 0) {
@@ -134,13 +148,20 @@ function buildEventWiseTable(entries) {
     return;
   }
 
-  tbody.innerHTML = '';
+  tbody.innerHTML = "";
 
   for (let i = 0; i < eventNames.length; i++) {
     const name = eventNames[i];
     const totals = eventTotals[name];
 
-    tbody.innerHTML += '<tr><td>' + name + '</td><td>TK' + totals.income + '</td><td>TK' + totals.expense + '</td></tr>';
+    tbody.innerHTML +=
+      "<tr><td>" +
+      name +
+      "</td><td>TK" +
+      totals.income +
+      "</td><td>TK" +
+      totals.expense +
+      "</td></tr>";
   }
 }
 
@@ -154,20 +175,20 @@ function buildLedger(entries) {
     return new Date(a.createdAt) - new Date(b.createdAt);
   });
 
-  const tbody = document.getElementById('ledgerTable').querySelector('tbody');
-  tbody.innerHTML = '';
+  const tbody = document.getElementById("ledgerTable").querySelector("tbody");
+  tbody.innerHTML = "";
 
   let runningBalance = 0;
 
   for (let i = 0; i < sortedEntries.length; i++) {
     const entry = sortedEntries[i];
 
-    let amountText = '+TK' + entry.amount;
-    if (entry.type === 'income') {
+    let amountText = "+TK" + entry.amount;
+    if (entry.type === "income") {
       runningBalance = runningBalance + entry.amount;
     } else {
       runningBalance = runningBalance - entry.amount;
-      amountText = '-TK' + entry.amount;
+      amountText = "-TK" + entry.amount;
     }
 
     tbody.innerHTML += `
@@ -182,8 +203,8 @@ function buildLedger(entries) {
   }
 }
 
-// ============ Print বাটন ============
-document.getElementById('printBtn').addEventListener('click', function () {
+// ============ Print button ============
+document.getElementById("printBtn").addEventListener("click", function () {
   window.print();
 });
 

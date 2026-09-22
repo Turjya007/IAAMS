@@ -1,88 +1,92 @@
-const token = localStorage.getItem('iaamsToken');
+const token = localStorage.getItem("iaamsToken");
 
 if (!token) {
-  window.location.href = 'login.html';
+  window.location.href = "login.html";
 }
 
 // ============ Sidebar tab switch korar Logic (dashboard.js theke hubuhu copy) ============
 
-const navButtons = document.querySelectorAll('.nav-btn');
+const navButtons = document.querySelectorAll(".nav-btn");
 
 navButtons.forEach(function (button) {
-  button.addEventListener('click', function () {
-
+  button.addEventListener("click", function () {
     // Ei link button gular (jemon "Back to Dashboard") data-section nai,
     // Tai segular jonno ei tab switch logic skip korte hobe, nahole error ashbe
-    const sectionName = button.getAttribute('data-section');
+    const sectionName = button.getAttribute("data-section");
     if (!sectionName) {
       return; // data-section na thakle ekhane e theme jacche, nicher code cholbe na
     }
 
     navButtons.forEach(function (btn) {
-      btn.classList.remove('active');
+      btn.classList.remove("active");
     });
 
-    button.classList.add('active');
+    button.classList.add("active");
 
-    document.querySelectorAll('.content-section').forEach(function (section) {
-      section.classList.add('hidden');
+    document.querySelectorAll(".content-section").forEach(function (section) {
+      section.classList.add("hidden");
     });
 
-    document.getElementById('section-' + sectionName).classList.remove('hidden');
+    document
+      .getElementById("section-" + sectionName)
+      .classList.remove("hidden");
 
     // Kon tab a click holo tar opor vitti kore data load kora hocche
 
-      if (sectionName === 'pendingUsers') {
+    if (sectionName === "pendingUsers") {
       loadPendingUsers();
-    } else if (sectionName === 'pendingEvents') {
+    } else if (sectionName === "pendingEvents") {
       loadPendingEvents();
-    } else if (sectionName === 'payments') {
+    } else if (sectionName === "payments") {
       loadPendingPayments();
-    } else if (sectionName === 'fund') {
+    } else if (sectionName === "fund") {
       loadFundData();
     }
   });
 });
 
-
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
-  return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 // ============ Pending Alumni list Load kora ============
 async function loadPendingUsers() {
-  const container = document.getElementById('pendingUsersContainer');
-  container.innerHTML = '<p>Loading...</p>';
+  const container = document.getElementById("pendingUsersContainer");
+  container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const response = await fetch('/api/admin/pending-users', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/admin/pending-users", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      container.innerHTML = '<p>Could not load pending alumni.</p>';
+      container.innerHTML = "<p>Could not load pending alumni.</p>";
       return;
     }
 
     displayPendingUsers(data);
-
   } catch (error) {
-    container.innerHTML = '<p>Something went wrong.</p>';
+    container.innerHTML = "<p>Something went wrong.</p>";
   }
 }
 
 function displayPendingUsers(users) {
-  const container = document.getElementById('pendingUsersContainer');
+  const container = document.getElementById("pendingUsersContainer");
 
   if (users.length === 0) {
-    container.innerHTML = '<p class="empty-message">No pending alumni right now.</p>';
+    container.innerHTML =
+      '<p class="empty-message">No pending alumni right now.</p>';
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
@@ -93,9 +97,9 @@ function displayPendingUsers(users) {
       <div class="admin-item-card">
         <h3 class="admin-item-title">${user.name}</h3>
         <p class="admin-item-info">Email: ${user.email}</p>
-        <p class="admin-item-info">Batch: ${user.batch || 'Not provided'}</p>
-        <p class="admin-item-info">Department: ${user.department || 'Not provided'}</p>
-        <p class="admin-item-info">Graduation Year: ${user.graduationYear || 'Not provided'}</p>
+        <p class="admin-item-info">Batch: ${user.batch || "Not provided"}</p>
+        <p class="admin-item-info">Department: ${user.department || "Not provided"}</p>
+        <p class="admin-item-info">Graduation Year: ${user.graduationYear || "Not provided"}</p>
 
         <div class="action-buttons">
           <button class="btn-approve" onclick="approveUser('${user._id}')">Approve</button>
@@ -114,85 +118,82 @@ function displayPendingUsers(users) {
 // karon HTML er onclick theke eder call kora hocche
 async function approveUser(userId) {
   try {
-    const response = await fetch('/api/admin/approve/' + userId, {
-      method: 'PATCH',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/admin/approve/" + userId, {
+      method: "PATCH",
+      headers: { Authorization: "Bearer " + token },
     });
 
     if (!response.ok) {
-      alert('Approve korte somossa hoyeche।');
+      alert("Approve korte somossa hoyeche।");
       return;
     }
 
     // Approve shofol hole list ta abar load korchi,
     // tahole jake approve kora holo se ar pending list a dekhabe na
     loadPendingUsers();
-
   } catch (error) {
-    alert('Something went wrong.');
+    alert("Something went wrong.");
   }
 }
 
 async function rejectUser(userId) {
   try {
-    const response = await fetch('/api/admin/reject/' + userId, {
-      method: 'PATCH',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/admin/reject/" + userId, {
+      method: "PATCH",
+      headers: { Authorization: "Bearer " + token },
     });
 
     if (!response.ok) {
-      alert('Reject korte somossa hoyeche।');
+      alert("Reject korte somossa hoyeche।");
       return;
     }
 
     loadPendingUsers();
-
   } catch (error) {
-    alert('Something went wrong.');
+    alert("Something went wrong.");
   }
 }
 
 // ============ Logout ============
-document.getElementById('logoutBtn').addEventListener('click', function () {
-  localStorage.removeItem('iaamsToken');
-  window.location.href = 'login.html';
+document.getElementById("logoutBtn").addEventListener("click", function () {
+  localStorage.removeItem("iaamsToken");
+  window.location.href = "login.html";
 });
-
 
 // ============ Pending Events list Load kora ============
 async function loadPendingEvents() {
-  const container = document.getElementById('pendingEventsContainer');
-  container.innerHTML = '<p>Loading...</p>';
+  const container = document.getElementById("pendingEventsContainer");
+  container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const response = await fetch('/api/events/pending', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/events/pending", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      container.innerHTML = '<p>Could not load pending events.</p>';
+      container.innerHTML = "<p>Could not load pending events.</p>";
       return;
     }
 
     displayPendingEvents(data);
-
   } catch (error) {
-    container.innerHTML = '<p>Something went wrong.</p>';
+    container.innerHTML = "<p>Something went wrong.</p>";
   }
 }
 
 function displayPendingEvents(events) {
-  const container = document.getElementById('pendingEventsContainer');
+  const container = document.getElementById("pendingEventsContainer");
 
   if (events.length === 0) {
-    container.innerHTML = '<p class="empty-message">No pending events right now.</p>';
+    container.innerHTML =
+      '<p class="empty-message">No pending events right now.</p>';
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
@@ -221,39 +222,37 @@ function displayPendingEvents(events) {
 // ============ Approve / Reject Event korar Logic ============
 async function approveEvent(eventId) {
   try {
-    const response = await fetch('/api/events/approve/' + eventId, {
-      method: 'PATCH',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/events/approve/" + eventId, {
+      method: "PATCH",
+      headers: { Authorization: "Bearer " + token },
     });
 
     if (!response.ok) {
-      alert('Approve korte somossa hoyeche');
+      alert("Approve korte somossa hoyeche");
       return;
     }
 
     loadPendingEvents();
-
   } catch (error) {
-    alert('Something went wrong.');
+    alert("Something went wrong.");
   }
 }
 
 async function rejectEvent(eventId) {
   try {
-    const response = await fetch('/api/events/reject/' + eventId, {
-      method: 'PATCH',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/events/reject/" + eventId, {
+      method: "PATCH",
+      headers: { Authorization: "Bearer " + token },
     });
 
     if (!response.ok) {
-      alert('Reject korte somossa hoyeche');
+      alert("Reject korte somossa hoyeche");
       return;
     }
 
     loadPendingEvents();
-
   } catch (error) {
-    alert('Something went wrong.');
+    alert("Something went wrong.");
   }
 }
 // page load howar sathe sathe prothome Pending Alumni list dekhacchi
@@ -261,38 +260,38 @@ loadPendingUsers();
 
 // ============ Pending Payments list Load kora ============
 async function loadPendingPayments() {
-  const container = document.getElementById('paymentsContainer');
-  container.innerHTML = '<p>Loading...</p>';
+  const container = document.getElementById("paymentsContainer");
+  container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const response = await fetch('/api/registrations/pending', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/registrations/pending", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      container.innerHTML = '<p>Could not load pending payments.</p>';
+      container.innerHTML = "<p>Could not load pending payments.</p>";
       return;
     }
 
     displayPendingPayments(data);
-
   } catch (error) {
-    container.innerHTML = '<p>Something went wrong.</p>';
+    container.innerHTML = "<p>Something went wrong.</p>";
   }
 }
 
 function displayPendingPayments(registrations) {
-  const container = document.getElementById('paymentsContainer');
+  const container = document.getElementById("paymentsContainer");
 
   if (registrations.length === 0) {
-    container.innerHTML = '<p class="empty-message">No pending payments right now.</p>';
+    container.innerHTML =
+      '<p class="empty-message">No pending payments right now.</p>';
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (let i = 0; i < registrations.length; i++) {
     const registration = registrations[i];
@@ -318,45 +317,53 @@ function displayPendingPayments(registrations) {
 // ============ Mark as Paid korar Logic ============
 async function markAsPaid(registrationId) {
   try {
-    const response = await fetch('/api/registrations/' + registrationId + '/mark-paid', {
-      method: 'PATCH',
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const response = await fetch(
+      "/api/registrations/" + registrationId + "/mark-paid",
+      {
+        method: "PATCH",
+        headers: { Authorization: "Bearer " + token },
+      },
+    );
 
     if (!response.ok) {
-      alert('Mark as Paid করতে সমস্যা হয়েছে।');
+      alert("Mark as Paid korte somossa hoyeche।");
       return;
     }
 
     // Mark korar por list abar load korchi,
     // tahole jake paid kora holo se ar pending lost a dekhabe na
     loadPendingPayments();
-
   } catch (error) {
-    alert('Something went wrong.');
+    alert("Something went wrong.");
   }
 }
 
 // ============ Fund Management ============
 
 // type (income/expense) onujayi category dropdown puron kora
-const incomeCategories = ['Event Registration Fee', 'Sponsorship', 'Others'];
-const expenseCategories = ['Decoration', 'Food', 'Printing', 'Prizes', 'Others'];
+const incomeCategories = ["Event Registration Fee", "Sponsorship", "Others"];
+const expenseCategories = [
+  "Decoration",
+  "Food",
+  "Printing",
+  "Prizes",
+  "Others",
+];
 
 function populateCategoryDropdown() {
-  const typeSelect = document.getElementById('fundTypeSelect');
-  const categorySelect = document.getElementById('fundCategorySelect');
+  const typeSelect = document.getElementById("fundTypeSelect");
+  const categorySelect = document.getElementById("fundCategorySelect");
 
   let categoryList = [];
-  if (typeSelect.value === 'income') {
+  if (typeSelect.value === "income") {
     categoryList = incomeCategories;
   } else {
     categoryList = expenseCategories;
   }
 
-  categorySelect.innerHTML = '';
+  categorySelect.innerHTML = "";
   for (let i = 0; i < categoryList.length; i++) {
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = categoryList[i];
     option.textContent = categoryList[i];
     categorySelect.appendChild(option);
@@ -368,141 +375,149 @@ function populateCategoryDropdown() {
 
 // "Others" select korle extra text box dekhano, na hole lukano
 function toggleOtherCategoryInput() {
-  const categorySelect = document.getElementById('fundCategorySelect');
-  const otherInput = document.getElementById('fundOtherCategoryInput');
+  const categorySelect = document.getElementById("fundCategorySelect");
+  const otherInput = document.getElementById("fundOtherCategoryInput");
 
-  if (categorySelect.value === 'Others') {
-    otherInput.classList.remove('hidden');
+  if (categorySelect.value === "Others") {
+    otherInput.classList.remove("hidden");
   } else {
-    otherInput.classList.add('hidden');
+    otherInput.classList.add("hidden");
   }
 }
 
 // type dropdown change hole category dropdown abar bananor jonno
-document.getElementById('fundTypeSelect').addEventListener('change', populateCategoryDropdown);
-document.getElementById('fundCategorySelect').addEventListener('change', toggleOtherCategoryInput);
+document
+  .getElementById("fundTypeSelect")
+  .addEventListener("change", populateCategoryDropdown);
+document
+  .getElementById("fundCategorySelect")
+  .addEventListener("change", toggleOtherCategoryInput);
 
 // page load howar shathe shathe ekbar category dropdown purno kore rakhi
 populateCategoryDropdown();
 
 // ============ notun Entry Add kora ============
-document.getElementById('addFundEntryBtn').addEventListener('click', async function () {
-  const type = document.getElementById('fundTypeSelect').value;
-  const categorySelectValue = document.getElementById('fundCategorySelect').value;
-  const otherCategoryValue = document.getElementById('fundOtherCategoryInput').value;
-  const amount = document.getElementById('fundAmountInput').value;
-  const description = document.getElementById('fundDescriptionInput').value;
-  const messageBox = document.getElementById('fundFormMessage');
+document
+  .getElementById("addFundEntryBtn")
+  .addEventListener("click", async function () {
+    const type = document.getElementById("fundTypeSelect").value;
+    const categorySelectValue =
+      document.getElementById("fundCategorySelect").value;
+    const otherCategoryValue = document.getElementById(
+      "fundOtherCategoryInput",
+    ).value;
+    const amount = document.getElementById("fundAmountInput").value;
+    const description = document.getElementById("fundDescriptionInput").value;
+    const messageBox = document.getElementById("fundFormMessage");
 
-  // jodi "Others" select kora thake, tahole free-text ta e asol category hobe
-  let finalCategory = categorySelectValue;
-  if (categorySelectValue === 'Others') {
-    finalCategory = otherCategoryValue;
-  }
+    // jodi "Others" select kora thake, tahole free-text ta e asol category hobe
+    let finalCategory = categorySelectValue;
+    if (categorySelectValue === "Others") {
+      finalCategory = otherCategoryValue;
+    }
 
-  if (finalCategory.trim() === '' || amount.trim() === '') {
-    messageBox.textContent = 'Please fill category and amount.';
-    return;
-  }
-
-    // amount ta positive number kina check kortesi
-  if (Number(amount) <= 0) {
-    messageBox.textContent = 'Amount must be a positive number.';
-    return;
-  }
-
-
-  try {
-    const response = await fetch('/api/fund', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify({
-        type: type,
-        category: finalCategory,
-        amount: amount,
-        description: description
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      messageBox.textContent = data.message || 'Failed to add entry.';
+    if (finalCategory.trim() === "" || amount.trim() === "") {
+      messageBox.textContent = "Please fill category and amount.";
       return;
     }
 
-    // form khali kore dicchi
-    document.getElementById('fundAmountInput').value = '';
-    document.getElementById('fundDescriptionInput').value = '';
-    document.getElementById('fundOtherCategoryInput').value = '';
-    messageBox.textContent = 'Entry added successfully!';
+    // amount ta positive number kina check kortesi
+    if (Number(amount) <= 0) {
+      messageBox.textContent = "Amount must be a positive number.";
+      return;
+    }
 
-    // list ar summary abar load kortesi
-    loadFundData();
+    try {
+      const response = await fetch("/api/fund", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          type: type,
+          category: finalCategory,
+          amount: amount,
+          description: description,
+        }),
+      });
 
-  } catch (error) {
-    messageBox.textContent = 'Something went wrong.';
-  }
-});
+      const data = await response.json();
 
-// ============ Fund ডেটা (Entry List + Summary) Load করা ============
+      if (!response.ok) {
+        messageBox.textContent = data.message || "Failed to add entry.";
+        return;
+      }
+
+      // form khali kore dicchi
+      document.getElementById("fundAmountInput").value = "";
+      document.getElementById("fundDescriptionInput").value = "";
+      document.getElementById("fundOtherCategoryInput").value = "";
+      messageBox.textContent = "Entry added successfully!";
+
+      // list ar summary abar load kortesi
+      loadFundData();
+    } catch (error) {
+      messageBox.textContent = "Something went wrong.";
+    }
+  });
+
+// ============ Fund data (Entry List + Summary) Load kora ============
 async function loadFundData() {
-  const container = document.getElementById('fundEntriesContainer');
-  container.innerHTML = '<p>Loading...</p>';
+  const container = document.getElementById("fundEntriesContainer");
+  container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const response = await fetch('/api/fund', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/fund", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      container.innerHTML = '<p>Could not load fund data.</p>';
+      container.innerHTML = "<p>Could not load fund data.</p>";
       return;
     }
 
     // Summary card gulo update korchi
-    document.getElementById('totalIncomeText').textContent = data.totalIncome + " TK";
-    document.getElementById('totalExpenseText').textContent = data.totalExpense + " TK";
-    document.getElementById('balanceText').textContent = data.balance + " TK";
+    document.getElementById("totalIncomeText").textContent =
+      data.totalIncome + " TK";
+    document.getElementById("totalExpenseText").textContent =
+      data.totalExpense + " TK";
+    document.getElementById("balanceText").textContent = data.balance + " TK";
 
     displayFundEntries(data.entries);
-
   } catch (error) {
-    container.innerHTML = '<p>Something went wrong.</p>';
+    container.innerHTML = "<p>Something went wrong.</p>";
   }
 }
 
 function displayFundEntries(entries) {
-  const container = document.getElementById('fundEntriesContainer');
+  const container = document.getElementById("fundEntriesContainer");
 
   if (entries.length === 0) {
     container.innerHTML = '<p class="empty-message">No fund entries yet.</p>';
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i];
 
     // type onujayi css class ('entry-income' ba 'entry-expense')
-    let entryClass = 'entry-income';
-    let sign = '+';
-    if (entry.type === 'expense') {
-      entryClass = 'entry-expense';
-      sign = '-';
+    let entryClass = "entry-income";
+    let sign = "+";
+    if (entry.type === "expense") {
+      entryClass = "entry-expense";
+      sign = "-";
     }
 
     const cardHTML = `
       <div class="admin-item-card ${entryClass}">
         <h3 class="admin-item-title">${entry.category} (${sign}TK ${entry.amount})</h3>
-        <p class="admin-item-info">Description: ${entry.description || 'N/A'}</p>
+        <p class="admin-item-info">Description: ${entry.description || "N/A"}</p>
         <p class="admin-item-info">Added By: ${entry.addedBy.name}</p>
         <p class="admin-item-info">Date: ${formatDate(entry.createdAt)}</p>
       </div>

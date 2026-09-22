@@ -1,138 +1,148 @@
-const token = localStorage.getItem('iaamsToken');
+const token = localStorage.getItem("iaamsToken");
 
 if (!token) {
-  window.location.href = 'login.html';
+  window.location.href = "login.html";
 }
 
 // ============ Sidebar tab switch korar Logic ============
 
 // sob nav button khuje ber korchi
-const navButtons = document.querySelectorAll('.nav-btn');
+const navButtons = document.querySelectorAll(".nav-btn");
 
 // protita button a listener boshacchi
 navButtons.forEach(function (button) {
-  button.addEventListener('click', function () {
-
+  button.addEventListener("click", function () {
     // 1st a sib button a "active" class shoracchi
     navButtons.forEach(function (btn) {
-      btn.classList.remove('active');
+      btn.classList.remove("active");
     });
 
-    // যেই বাটনে ক্লিক হলো, তাকে "active" বানাচ্ছি
-    button.classList.add('active');
+    // jei button click holo take "active" banacchi
+    button.classList.add("active");
 
-    // এই বাটনের data-section attribute থেকে বুঝছি কোন section দেখাতে হবে
-    const sectionName = button.getAttribute('data-section');
+    // ei button er data-section attribute theke bujhci keno section dekhate hobe
+    const sectionName = button.getAttribute("data-section");
 
-    // সব content section লুকিয়ে ফেলছি প্রথমে
-    document.querySelectorAll('.content-section').forEach(function (section) {
-      section.classList.add('hidden');
+    // সব content section lukiye felchi prothom a
+    document.querySelectorAll(".content-section").forEach(function (section) {
+      section.classList.add("hidden");
     });
 
-    // শুধু যেটা দরকার সেটা দেখাচ্ছি
-    document.getElementById('section-' + sectionName).classList.remove('hidden');
+    // shudhu jeta dorkar seta banacchi
+    document
+      .getElementById("section-" + sectionName)
+      .classList.remove("hidden");
 
-    // যদি "My Events" ট্যাবে ক্লিক করা হয়, তাহলে ডেটা load করছি
-    if (sectionName === 'myEvents') {
+    // jodi "My Events" tab a click kora hoi, tahole data load korchi
+    if (sectionName === "myEvents") {
       loadMyEvents();
     }
 
-    // যদি "Notifications" ট্যাবে ক্লিক করা হয়, তাহলে load + read মার্ক করছি
-    if (sectionName === 'notifications') {
+    // jodi "Notifications" tab a click kora hoi, tahole load + read mark korchi
+    if (sectionName === "notifications") {
       loadNotifications();
     }
   });
 });
 
-// ============ Profile Load করা ============
+// ============ Profile Load kora ============
 async function loadProfile() {
   try {
-    const response = await fetch('/api/auth/me', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/auth/me", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      localStorage.removeItem('iaamsToken');
-      window.location.href = 'login.html';
+      localStorage.removeItem("iaamsToken");
+      window.location.href = "login.html";
       return;
     }
 
     displayProfile(data);
-
   } catch (error) {
-    console.log('Error loading profile:', error);
+    console.log("Error loading profile:", error);
   }
 }
 
 function displayProfile(user) {
   const firstLetter = user.name.charAt(0).toUpperCase();
-  document.getElementById('avatarCircle').textContent = firstLetter;
+  document.getElementById("avatarCircle").textContent = firstLetter;
 
-  document.getElementById('profileName').textContent = user.name;
-  document.getElementById('profileRole').textContent = user.role;
-  document.getElementById('profileEmail').textContent = user.email;
-  document.getElementById('profileBatch').textContent = user.batch || 'Not provided';
-  document.getElementById('profileDepartment').textContent = user.department || 'Not provided';
-  document.getElementById('profileGradYear').textContent = user.graduationYear || 'Not provided';
-  document.getElementById('profileMembership').textContent = user.membershipType;
-  document.getElementById('profileStatus').textContent = user.status;
-    // যদি user admin হয়, তাহলে "Admin Panel" লিংকটা দেখাচ্ছি
-  if (user.role === 'admin') {
-    document.getElementById('adminPanelLink').classList.remove('hidden');
+  document.getElementById("profileName").textContent = user.name;
+  document.getElementById("profileRole").textContent = user.role;
+  document.getElementById("profileEmail").textContent = user.email;
+  document.getElementById("profileBatch").textContent =
+    user.batch || "Not provided";
+  document.getElementById("profileDepartment").textContent =
+    user.department || "Not provided";
+  document.getElementById("profileGradYear").textContent =
+    user.graduationYear || "Not provided";
+  document.getElementById("profileMembership").textContent =
+    user.membershipType;
+  document.getElementById("profileStatus").textContent = user.status;
+  // jodi user admin hoi, yahole "Admin Panel" link ti dekhacchi
+  if (user.role === "admin") {
+    document.getElementById("adminPanelLink").classList.remove("hidden");
   }
 }
 
-// ============ My Events (Registration লিস্ট) Load করা ============
+// ============ My Events (Registration list) Load kora ============
 async function loadMyEvents() {
-  const container = document.getElementById('myEventsContainer');
-  container.innerHTML = '<p>Loading...</p>';
+  const container = document.getElementById("myEventsContainer");
+  container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const response = await fetch('/api/registrations/my', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/registrations/my", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      container.innerHTML = '<p>Could not load your events.</p>';
+      container.innerHTML = "<p>Could not load your events.</p>";
       return;
     }
 
     displayMyEvents(data);
-
   } catch (error) {
-    container.innerHTML = '<p>Something went wrong.</p>';
+    container.innerHTML = "<p>Something went wrong.</p>";
   }
 }
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
-  return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function displayMyEvents(registrations) {
-  const container = document.getElementById('myEventsContainer');
+  const container = document.getElementById("myEventsContainer");
 
   if (registrations.length === 0) {
-    container.innerHTML = '<p>You haven\'t registered for any events yet.</p>';
+    container.innerHTML = "<p>You haven't registered for any events yet.</p>";
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (let i = 0; i < registrations.length; i++) {
     const reg = registrations[i];
     const event = reg.event;
 
     // paid hole ekta button dekhabo, na hole kichu dekhabo na
-    let cardButton = '';
-    if (reg.paymentStatus === 'paid') {
-      cardButton = '<a href="invitation-card.html?id=' + reg._id + '" class="view-card-btn">View Invitation Card</a>';
+    let cardButton = "";
+    if (reg.paymentStatus === "paid") {
+      cardButton =
+        '<a href="invitation-card.html?id=' +
+        reg._id +
+        '" class="view-card-btn">View Invitation Card</a>';
     }
 
     const cardHTML = `
@@ -150,26 +160,26 @@ function displayMyEvents(registrations) {
 }
 
 // ============ Logout ============
-document.getElementById('logoutBtn').addEventListener('click', function () {
-  localStorage.removeItem('iaamsToken');
-  window.location.href = 'login.html';
+document.getElementById("logoutBtn").addEventListener("click", function () {
+  localStorage.removeItem("iaamsToken");
+  window.location.href = "login.html";
 });
 
-// ============ Notification Load করা ============
+// ============ Notification Load kora ============
 async function loadNotifications() {
-  const container = document.getElementById('notificationsContainer');
-  container.innerHTML = '<p>Loading...</p>';
+  const container = document.getElementById("notificationsContainer");
+  container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const response = await fetch('/api/notifications/my', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/notifications/my", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      container.innerHTML = '<p>Could not load notifications.</p>';
+      container.innerHTML = "<p>Could not load notifications.</p>";
       return;
     }
 
@@ -179,35 +189,40 @@ async function loadNotifications() {
     await markNotificationsAsRead();
 
     // dot ta lukiye felchi, karon ekhon r kono unread nai
-    document.getElementById('notifDot').classList.add('hidden');
-
+    document.getElementById("notifDot").classList.add("hidden");
   } catch (error) {
-    container.innerHTML = '<p>Something went wrong.</p>';
+    container.innerHTML = "<p>Something went wrong.</p>";
   }
 }
 
 function formatNotificationTime(dateString) {
   const dateObj = new Date(dateString);
-  return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function displayNotifications(notifications) {
-  const container = document.getElementById('notificationsContainer');
+  const container = document.getElementById("notificationsContainer");
 
   if (notifications.length === 0) {
-    container.innerHTML = '<p>You have no notifications yet.</p>';
+    container.innerHTML = "<p>You have no notifications yet.</p>";
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (let i = 0; i < notifications.length; i++) {
     const notif = notifications[i];
 
     // unread hole ekta extra class jog kortesi, jeta die CSS te alada style dekhabe
-    let unreadClass = '';
+    let unreadClass = "";
     if (notif.isRead === false) {
-      unreadClass = 'unread';
+      unreadClass = "unread";
     }
 
     const cardHTML = `
@@ -221,24 +236,24 @@ function displayNotifications(notifications) {
   }
 }
 
-// ============ সব Notification "read" মার্ক করা ============
+// ============ sob Notification "read" mark kora ============
 async function markNotificationsAsRead() {
   try {
-    await fetch('/api/notifications/mark-read', {
-      method: 'PATCH',
-      headers: { 'Authorization': 'Bearer ' + token }
+    await fetch("/api/notifications/mark-read", {
+      method: "PATCH",
+      headers: { Authorization: "Bearer " + token },
     });
   } catch (error) {
-    console.log('Error marking notifications as read:', error);
+    console.log("Error marking notifications as read:", error);
   }
 }
 
-// ============ প্রথমবার পেজ লোড হলে, unread notification আছে কিনা check করা ============
+// ============ prothombar dekhle, unread notification ache kina check ============
 async function checkUnreadNotifications() {
   try {
-    const response = await fetch('/api/notifications/my', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/notifications/my", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
@@ -257,55 +272,56 @@ async function checkUnreadNotifications() {
 
     // unread thakle dot ta dekhacchi
     if (unreadCount > 0) {
-      document.getElementById('notifDot').classList.remove('hidden');
+      document.getElementById("notifDot").classList.remove("hidden");
     }
-
   } catch (error) {
-    console.log('Error checking notifications:', error);
+    console.log("Error checking notifications:", error);
   }
 }
 
-// পেজ লোড হওয়ার সাথে সাথে প্রথমে Profile দেখাচ্ছি
+// page load howar sathe sathe Profile dekhacchi
 loadProfile();
 
-// পেজ লোড হওয়ার সাথে সাথে unread notification আছে কিনা চেক করছি (dot দেখানোর জন্য)
+// page load howar sathe sathe unread notification ache kina check korchi (dot dekhanor jonno)
 checkUnreadNotifications();
 
 // ============ Payment theke ferar por status check kora ============
 function checkPaymentStatus() {
   const params = new URLSearchParams(window.location.search);
-  const paymentStatus = params.get('payment');
+  const paymentStatus = params.get("payment");
 
   if (!paymentStatus) {
     return; // URL e payment param nai, tai kisu korar dorkar nai
   }
 
-  let message = '';
-  let messageClass = '';
+  let message = "";
+  let messageClass = "";
 
-  if (paymentStatus === 'success') {
-    message = '✔️ Payment successful! Your registration is now confirmed.';
-    messageClass = 'success';
-  } else if (paymentStatus === 'failed') {
-    message = '❌ Payment failed. Please try registering again.';
-    messageClass = 'error';
-  } else if (paymentStatus === 'cancelled') {
-    message = '⚠️ Payment was cancelled.';
-    messageClass = 'error';
+  if (paymentStatus === "success") {
+    message = "✔️ Payment successful! Your registration is now confirmed.";
+    messageClass = "success";
+  } else if (paymentStatus === "failed") {
+    message = "❌ Payment failed. Please try registering again.";
+    messageClass = "error";
+  } else if (paymentStatus === "cancelled") {
+    message = "⚠️ Payment was cancelled.";
+    messageClass = "error";
   } else {
     return; // onno kono unknown value hole kisu dekhabo na
   }
 
   // ekta message banner banacchi, upore boshiye dicchi
-  const banner = document.createElement('p');
+  const banner = document.createElement("p");
   banner.textContent = message;
-  banner.className = 'payment-status-banner ' + messageClass;
+  banner.className = "payment-status-banner " + messageClass;
 
-  const mainContent = document.querySelector('.main-content');
+  const mainContent = document.querySelector(".main-content");
   mainContent.insertBefore(banner, mainContent.firstChild);
 
   // "My Events" tab e switch kore dicchi, jate result soja dekhte pai
-  const myEventsButton = document.querySelector('.nav-btn[data-section="myEvents"]');
+  const myEventsButton = document.querySelector(
+    '.nav-btn[data-section="myEvents"]',
+  );
   if (myEventsButton) {
     myEventsButton.click();
   }
@@ -314,5 +330,5 @@ function checkPaymentStatus() {
   window.history.replaceState({}, document.title, window.location.pathname);
 }
 
-// পেজ লোড হওয়ার সাথে সাথে payment status check করছি
+// page load howar sathe sathe payment status check korchi
 checkPaymentStatus();

@@ -1,18 +1,18 @@
-const token = localStorage.getItem('iaamsToken');
+const token = localStorage.getItem("iaamsToken");
 
 if (!token) {
-  window.location.href = 'login.html';
+  window.location.href = "login.html";
 }
 
-const eventsContainer = document.getElementById('eventsContainer');
+const eventsContainer = document.getElementById("eventsContainer");
 
 // ============ Admin hole Sidebar a Admin Panel link dekhano ============
 let isAdmin = false;
 async function checkAdminAndShowLink() {
   try {
-    const response = await fetch('/api/auth/me', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/auth/me", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
@@ -21,25 +21,24 @@ async function checkAdminAndShowLink() {
       return; // kono somossa hole ekhane e shesh, link lukano e thakbe
     }
 
-    if (data.role === 'admin') {
-      document.getElementById('adminPanelLink').classList.remove('hidden');
+    if (data.role === "admin") {
+      document.getElementById("adminPanelLink").classList.remove("hidden");
       isAdmin = true;
     }
-
   } catch (error) {
-    console.log('Error checking role:', error);
+    console.log("Error checking role:", error);
   }
 }
 
 // ei array te jei event gulo te ami age thekei register korechi, tader ID joma thakbe
 let registeredEventIds = [];
 
-// ============ আমি যেই event গুলোতে register করেছি, তাদের ID গুলো আনছি ============
+// ============ ami jei event gulote register korechi, tader ID gulo anchi ============
 async function loadRegisteredEventIds() {
   try {
-    const response = await fetch('/api/registrations/my', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/registrations/my", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
@@ -48,44 +47,48 @@ async function loadRegisteredEventIds() {
       return; // fail korle empty array e thakbe
     }
 
-    // data হলো registration এর একটা array, প্রতিটার ভিতরে populate করা event আছে
+    // data holo registration er ekta array, protitar vitore populate kora event ache
     for (let i = 0; i < data.length; i++) {
       registeredEventIds.push(data[i].event._id);
     }
-
   } catch (error) {
-    console.log('Error loading registered events:', error);
+    console.log("Error loading registered events:", error);
   }
 }
 
-// ============ সব (approved) event নিয়ে আসা ============
+// ============ sob (approved) event niye asha ============
 async function loadEvents() {
   try {
-    const response = await fetch('/api/events', {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/events", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      eventsContainer.innerHTML = '<p>Could not load events. Please try again.</p>';
+      eventsContainer.innerHTML =
+        "<p>Could not load events. Please try again.</p>";
       return;
     }
 
     displayEvents(data);
-
   } catch (error) {
-    eventsContainer.innerHTML = '<p>Something went wrong. Please check your connection.</p>';
+    eventsContainer.innerHTML =
+      "<p>Something went wrong. Please check your connection.</p>";
   }
 }
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
-  return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
-// ============ একটা event এর ID আগে থেকে registeredEventIds এ আছে কিনা চেক করা ============
+// ============ ekta event er ID age theke registeredEventIds e ache ki na check kora ============
 function isAlreadyRegistered(eventId) {
   for (let i = 0; i < registeredEventIds.length; i++) {
     if (registeredEventIds[i] === eventId) {
@@ -95,24 +98,23 @@ function isAlreadyRegistered(eventId) {
   return false;
 }
 
-// ============ সব event কে row বানিয়ে পেজে বসানো ============
+// ============ sob event ke row baniye page a boshano ============
 function displayEvents(events) {
-
   if (events.length === 0) {
-    eventsContainer.innerHTML = '<p style="padding: 20px 0;">No events posted yet.</p>';
+    eventsContainer.innerHTML =
+      '<p style="padding: 20px 0;">No events posted yet.</p>';
     return;
   }
 
-  eventsContainer.innerHTML = '';
+  eventsContainer.innerHTML = "";
 
   for (let i = 0; i < events.length; i++) {
-
     const event = events[i];
     const alreadyRegistered = isAlreadyRegistered(event._id);
 
-    // যদি আগে থেকেই register করা থাকে, বাটনের বদলে badge দেখাবো
-    // নাহলে "Register" বাটন dekhabe
-    let actionHTML = '';
+    // jodi age thekei register kora thake, button er bodole badge dekhabo
+    // nahole "Register" button dekhabe
+    let actionHTML = "";
 
     if (alreadyRegistered) {
       actionHTML = '<span class="registered-badge">Registered ✓</span>';
@@ -121,15 +123,15 @@ function displayEvents(events) {
     }
 
     // admin hole QR button o dekhabo
-    let qrButtonHTML = '';
+    let qrButtonHTML = "";
 
     if (isAdmin) {
-  qrButtonHTML = `<button class="show-qr-btn" onclick="showQRCode('${event._id}', '${event.title}')">QR Code</button>
+      qrButtonHTML = `<button class="show-qr-btn" onclick="showQRCode('${event._id}', '${event.title}')">QR Code</button>
 
     <button class="show-qr-btn" onclick="showAttendanceList('${event._id}', '${event.title}')">Attendance</button>
 
     <button class="show-qr-btn" style="background-color: #dc2626;" onclick="deleteEvent('${event._id}', '${event.title}')">Delete</button>`;
-}
+    }
 
     const rowHTML = `
       <div class="event-row">
@@ -150,7 +152,7 @@ function displayEvents(events) {
           <p class="detail-line"><strong>Description:</strong> ${event.description}</p>
           <p class="detail-line"><strong>Place:</strong> ${event.place}</p>
           <p class="detail-line"><strong>Event Date:</strong> ${formatDate(event.eventDate)}</p>
-          <p class="detail-line"><strong>Registration Fee:</strong> ৳${event.registrationFee}</p>
+          <p class="detail-line"><strong>Registration Fee:</strong> TK${event.registrationFee}</p>
            <p class="detail-line"><strong>bKash Number:</strong> ${event.bkashNumber}</p>
           <p class="detail-line"><strong>Posted By:</strong> ${event.postedBy.name}</p>
           <p class="detail-line"><strong>Approved By:</strong> ${event.approvedBy.name}</p>
@@ -162,115 +164,117 @@ function displayEvents(events) {
   }
 }
 
-// ============ "Show More" টগল করা ============
+// ============ "Show More" toggle kora ============
 function toggleDetails(index) {
-  const detailsBox = document.getElementById('details-' + index);
-  detailsBox.classList.toggle('hidden');
+  const detailsBox = document.getElementById("details-" + index);
+  detailsBox.classList.toggle("hidden");
 }
-
 
 // ============ Register + Payment ekbare shuru kora ============
 async function registerAndPay(eventId) {
   try {
     // Step 1: age ekta pending registration banacchi (transactionId chara)
-    const regResponse = await fetch('/api/registrations', {
-      method: 'POST',
+    const regResponse = await fetch("/api/registrations", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ eventId: eventId })
+      body: JSON.stringify({ eventId: eventId }),
     });
 
     const regData = await regResponse.json();
 
     if (!regResponse.ok) {
-      alert(regData.message || 'Registration failed.');
+      alert(regData.message || "Registration failed.");
       return;
     }
 
     const registrationId = regData.registration._id;
 
     // Step 2: SSLCommerz theke payment page er URL chaichi
-    const payResponse = await fetch('/api/payment/initiate/' + registrationId, {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const payResponse = await fetch("/api/payment/initiate/" + registrationId, {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const payData = await payResponse.json();
 
     if (!payResponse.ok) {
-      alert(payData.message || 'Could not start payment.');
+      alert(payData.message || "Could not start payment.");
       return;
     }
 
     // Step 3: SSLCommerz er nijer payment page e pathiye dicchi
     window.location.href = payData.url;
-
   } catch (error) {
-    alert('Something went wrong. Please try again.');
+    alert("Something went wrong. Please try again.");
   }
 }
 
-// ============ QR Code দেখানো ============
+// ============ QR Code dekhano ============
 function showQRCode(eventId, eventTitle) {
   // ei URL tai QR code er vitore thakbe
   // alumni er phone diye scan korle ei link ta khulbe
-  const attendanceUrl = window.location.origin + '/attendance.html?eventId=' + eventId;
+  const attendanceUrl =
+    window.location.origin + "/attendance.html?eventId=" + eventId;
 
-  document.getElementById('qrModalTitle').innerText = eventTitle;
+  document.getElementById("qrModalTitle").innerText = eventTitle;
 
-  const canvas = document.getElementById('qrCanvas');
+  const canvas = document.getElementById("qrCanvas");
 
   // QRCode.toCanvas library theke asche (CDN script theke)
   // eta canvas er vitore QR code er chobi eke dey
   QRCode.toCanvas(canvas, attendanceUrl, function (error) {
     if (error) {
-      console.log('QR generate error:', error);
+      console.log("QR generate error:", error);
     }
   });
 
-  document.getElementById('qrModalOverlay').classList.remove('hidden');
+  document.getElementById("qrModalOverlay").classList.remove("hidden");
 }
 
 function closeQRModal() {
-  document.getElementById('qrModalOverlay').classList.add('hidden');
+  document.getElementById("qrModalOverlay").classList.add("hidden");
 }
 
 // ============ Logout ============
-document.getElementById('logoutBtn').addEventListener('click', function () {
-  localStorage.removeItem('iaamsToken');
-  window.location.href = 'login.html';
+document.getElementById("logoutBtn").addEventListener("click", function () {
+  localStorage.removeItem("iaamsToken");
+  window.location.href = "login.html";
 });
 
-// ============ Attendance List দেখানো ============
+// ============ Attendance List dekhano ============
 async function showAttendanceList(eventId, eventTitle) {
-  document.getElementById('attendanceModalTitle').innerText = eventTitle;
+  document.getElementById("attendanceModalTitle").innerText = eventTitle;
 
-  const listContainer = document.getElementById('attendanceListContainer');
-  listContainer.innerHTML = '<p>Loading...</p>';
+  const listContainer = document.getElementById("attendanceListContainer");
+  listContainer.innerHTML = "<p>Loading...</p>";
 
-  document.getElementById('attendanceModalOverlay').classList.remove('hidden');
+  document.getElementById("attendanceModalOverlay").classList.remove("hidden");
 
   try {
-    const response = await fetch('/api/registrations/attendance-list/' + eventId, {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const response = await fetch(
+      "/api/registrations/attendance-list/" + eventId,
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token },
+      },
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
-      listContainer.innerHTML = '<p>Could not load attendance list.</p>';
+      listContainer.innerHTML = "<p>Could not load attendance list.</p>";
       return;
     }
 
     if (data.length === 0) {
-      listContainer.innerHTML = '<p>No one has marked attendance yet.</p>';
+      listContainer.innerHTML = "<p>No one has marked attendance yet.</p>";
       return;
     }
 
-    listContainer.innerHTML = '';
+    listContainer.innerHTML = "";
 
     for (let i = 0; i < data.length; i++) {
       const registration = data[i];
@@ -278,54 +282,55 @@ async function showAttendanceList(eventId, eventTitle) {
         <p class="detail-line">${i + 1}. ${registration.user.name} (${registration.user.email})</p>
       `;
     }
-
   } catch (error) {
-    listContainer.innerHTML = '<p>Something went wrong.</p>';
+    listContainer.innerHTML = "<p>Something went wrong.</p>";
   }
 }
 
 function closeAttendanceModal() {
-  document.getElementById('attendanceModalOverlay').classList.add('hidden');
+  document.getElementById("attendanceModalOverlay").classList.add("hidden");
 }
 
 // ============ Event Delete kora (shudhu Admin) ============
 async function deleteEvent(eventId, eventTitle) {
-
   // vul kore click hole jate accident e delete na hoy, tai confirm korchi
-  const confirmed = confirm('Are you sure you want to delete "' + eventTitle + '"? This will also delete all registrations for this event, and registered alumni will be notified.');
+  const confirmed = confirm(
+    'Are you sure you want to delete "' +
+      eventTitle +
+      '"? This will also delete all registrations for this event, and registered alumni will be notified.',
+  );
 
   if (!confirmed) {
     return; // "Cancel" chapley ekhane e theme jabe
   }
 
   try {
-    const response = await fetch('/api/events/' + eventId, {
-      method: 'DELETE',
-      headers: { 'Authorization': 'Bearer ' + token }
+    const response = await fetch("/api/events/" + eventId, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer " + token },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.message || 'Could not delete event.');
+      alert(data.message || "Could not delete event.");
       return;
     }
 
-    alert('Event deleted successfully.');
+    alert("Event deleted successfully.");
 
     // list ta abar load kortesi, jate delete kora event ta ar na dekhay
     loadEvents();
-
   } catch (error) {
-    alert('Something went wrong.');
+    alert("Something went wrong.");
   }
 }
 
-// ============ পেজ লোড হওয়ার সাথে সাথে দুটো কাজ ============
-// প্রথমে registered event ID গুলো আনছি, তারপর event লিস্ট আনছি
-// (যেন button/badge প্রথমবারই সঠিকভাবে দেখানো যায়)
+// ============ page load howar sathe sathe duita kaj============
+// prothom a registered event ID gulo anchi, tarpor event list anchi
+// (jeno button/badge prothom barei sothik vabe dekhano jai)
 async function init() {
-  await checkAdminAndShowLink();   // ei line a await jog kora holo
+  await checkAdminAndShowLink(); // ei line a await jog kora holo
   await loadRegisteredEventIds();
   loadEvents();
 }
