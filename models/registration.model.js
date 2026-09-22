@@ -27,6 +27,12 @@ const registrationSchema = new mongoose.Schema({
     type: Boolean,
     default: false
     // By default false thakbe, QR code scan korle true hobe
+  },
+
+  riskFlagged: {
+    type: Boolean,
+    default: false
+    // SSLCommerz "risk_level" high dile true hobe, tokhon Admin manually review korbe
   }
 }, { timestamps: true });
 
